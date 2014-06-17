@@ -1,6 +1,16 @@
 #gameArea {
-  position: absolute;
-  left:     50%;
-  top:      50%;
-  background-color: orange;
+  
+  left:     100px;
+  top:      100px;
+  height: 400px;
+  width: 800px;
+  
+  border: solid;
+  border-color: black;
+}
+
+#gameCanvas {
+	height: 100%;
+	width: 100%;
+	background-color: orange;
 }
