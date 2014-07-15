@@ -3,20 +3,25 @@ var ctx = c.getContext("2d");
 var playerX = 80;
 var playerY = 100;
 var playerRadius = 2;
+
+var enemyX = 100;
+var enemyY = 140;
+var enemyRadius = 4;
+
+window.addEventListener("keydown", keyDownHandler, true);
 draw();
 
 //Jessica
+//Felicia
 function draw(){
 	//clear the canvas for the next frame
 	ctx.clearRect(0, 0, c.width, c.height);
 	ctx.beginPath();
-	ctx.arc(playerX,playerY,playerRadius,0,2*Math.PI, false);
+	ctx.arc(playerX,playerY,playerRadius,0,2*Math.PI, false); //player
+  ctx.arc(enemyX, enemyY, enemyRadius, 0,2*Math.PI, false); //enemy
 	ctx.closePath();
 	ctx.fill();
 }
-
-window.addEventListener("keydown", keyDownHandler, true);
-
 //Jessica
 function keyDownHandler(event){
 	var key = event.which;
@@ -67,7 +72,20 @@ function keyDownHandler(event){
 
         // redraw the player in its new position
         draw();
+        if(checkGameOver()){
+          window.removeEventListener("keydown", keyDownHandler, true);
+          alert("Game over!");
+        }
+}
 
+function checkGameOver(){
+  if(Math.abs(enemyX - playerX) < 3 && Math.abs(enemyY - playerY) < 3){
+    console.log("GAME OVER");
+    return true;
+  }else{
+    console.log("STILL ALIVE");
+    return false;
+  }
 }
 
 
