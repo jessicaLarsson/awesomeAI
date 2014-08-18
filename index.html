@@ -11,17 +11,46 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 	<body>
-		<div class="container">
+		<!--<div class="container">
 			<h1>Awesome AI project</h1>
 			<div id='gameArea'>
 			 	<canvas id='gameCanvas'></canvas>
 			 	<div id='statsPanel'></div>
 			</div>
-		</container>
+		</container>-->
+		
+		<div class="container">
+			<div class="display", id="display">
+        	</div>
+        	<div class="control">
+           		<textarea readonly rows="8" cols="50">
+					Type commands in the input below in order to move the mower.
+					U : move up
+					D : move down
+					R : move right
+					L : move left
+            	</textarea>
+            	<br/>
+	            <textarea id="commands" rows="8" cols="50">
+	            </textarea>
+	            <br/>
+	            <textarea readonly rows="8" cols="50">
+					Be careful! There are 3 kinds of terrain:
+					green -> grass, where the mower should be, most of the time
+					gray -> rock, where the mower can't go
+					red -> lava, where the mower will turn into ashes
+
+					This game is a proof of concept using d3js, feel free to fork and improve.
+            	</textarea>
+        	</div>
+		</div>
+
 
 	    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	    <script src="http://d3js.org/d3.v3.min.js"></script>
 	    <script src="js/bootstrap.min.js"></script>
 	    <script src= "js/gameEngine.js"></script>
+	    <script src= "js/testD3.js"></script>
 	</body>
 
 </html>
