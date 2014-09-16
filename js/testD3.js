@@ -52,8 +52,16 @@ $(function() {
              .attr("class", cssClass);
   }
 
+  function drawCurrentPosition(currentPosition) {
+    player    
+      .attr("cx", scales.x(currentPosition.x + 0.5))
+      .attr("cy", scales.y(currentPosition.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "position");
+
+  }
+
   function drawMowerHistory(groups, scales, path) {
-    // path
     groups.path.selectAll(".path").remove();
     var lineFunction = d3.svg.line()
                .x(function(d) { return scales.x(d.x + 0.5); })
@@ -74,17 +82,6 @@ $(function() {
              .attr("cy", function (d) { return scales.y(d.y + 0.5); })
              .attr("r", function (d) { return circleRadius; })
              .attr("class", "position");
-
-    // position number
-    var textData = groups.position.selectAll("text").data(path);
-    textData.exit().remove();
-    var texts = textData.enter().append("text");
-    var textAttributes = texts
-             .attr("x", function (d) { return scales.x(d.x + 0.5); })
-             .attr("y", function (d) { return scales.y(d.y + 0.5); })
-             .attr("dy", ".31em")
-             .text(function(d,i) { return i; })
-             .attr("class", "positionNumber");
   }
 
   function pickRandomPosition(map) {
@@ -93,103 +90,63 @@ $(function() {
     return grass[i];
   }
 
-  function getNext(map, current, command) {
-    switch(command) {
-      case "U":
-        return map.grid[current.x][current.y-1];
-      case "D":
-        return map.grid[current.x][current.y+1];
-      case "R":
-        return map.grid[current.x+1][current.y];
-      case "L":
-        return map.grid[current.x-1][current.y];
-      default:
-        throw "Unexpected command : "+command;
-      }
-  }
+  function keyDownHandler(event){
+    var key = event.which;
+    var next;
+    // Let keypress handle displayable characters
+      if(key>46){ return; }
 
-function keyPressHandler(event){
-  var key = event.which;
+      switch(key){
+          case 37:  // left key
+                next =  map.grid[currentPosition.x-1][currentPosition.y];
+                break;
 
-  switch(key){
-      case 97:  // left key
-          if((playerX-2)<= 0) { 
-             playerX = 0;
-          } else {
-            playerX -= 2; 
+              case 39:  // right key 
+                next = map.grid[currentPosition.x+1][currentPosition.y];
+                break;
+
+               case 38: //up key
+                next = map.grid[currentPosition.x][currentPosition.y-1];
+                break;
+
+               case 40: //down key
+                  next = map.grid[currentPosition.x][currentPosition.y+1];
+                break;
+
+              default:
+                break;
           }
+          executeCommands(next);
+        }
 
-            break;
-
-          case 100:  // right key 
-            if(playerX >= c.width){
-              playerX = c.width;
-            } else {
-              playerX += 2;
-            }
-            
-
-            break;
-
-           case 119: //up key
-            if(playerY-2 <= 0){
-              playerY = 0;
-            } else {
-              playerY -= 2;
-            }
-
-            break;
-
-           case 115: //down key
-            if(playerY+2 >= c.height){
-              playerY = c.height;
-            } else {
-              playerY += 2;
-            }
-            break;
-
-          default:
-            break;
-      }
-  }
-
-  function executeCommands(e) {
-    var content = $('#commands').val();
-    content = content.toUpperCase().replace(/[^UDRL]/g, "");
-    $('#commands').val(content);
-    var path = [start];
-    var current = start;
-    for(i = 0; i < content.length; i++) {
-      var next = getNext(map, current, content[i]);
+  function executeCommands(next) {
       switch(next.type) {
         case "grass":
-          path.push(next);
-          current = next;
+          currentPosition = next;
+          console.log(currentPosition.x + ", " + currentPosition.y);
+          drawCurrentPosition(currentPosition);
           break;
         case "rock":
           // stay at the same place
           break;
         case "lava":
-          drawMowerHistory(groups, scales, path);
-          alert("The mower turned into ashes, as predicted.", "Start again.");
-          $('#commands').val("");
-          drawMowerHistory(groups, scales, [start]);
+          //någonting ska väl hända??
           return;
         default:
           throw "Unexpected terrain type "+next.type;
       }
-    }
-    drawMowerHistory(groups, scales, path);
   }
 
-  var squareLength = 20;
+  var squareLength = 18;
   var circleRadius = 8;
   var ratios = { rock:0.05, lava:0.05 };
   var gridSize = { x:40, y:35 };
 
   var svgSize = getSvgSize(gridSize, squareLength);
   var map = buildMap(gridSize, ratios);
-  var start = pickRandomPosition(map)
+  var start = pickRandomPosition(map);
+
+  var currentPosition = start;
 
   var svgContainer = d3.select(".display")
                           .append("svg")
@@ -204,12 +161,17 @@ function keyPressHandler(event){
   var groups = { path:svgContainer.append("g"),
                   position:svgContainer.append("g") };
 
-  window.addEventListener("keypress", keyPressHandler, true);
+  var player = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(start.x + 0.5))
+      .attr("cy", scales.y(start.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "position");
 
-  $('#commands').on('input', executeCommands);
 
-  drawMowerHistory(groups, scales, [start]);
 
-  $('#commands').focus();
+
+  window.addEventListener("keydown", keyDownHandler, true);
   
 });
