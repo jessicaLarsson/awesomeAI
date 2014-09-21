@@ -60,29 +60,68 @@ $(function() {
       .attr("class", "position");
 
   }
-
-  function drawMowerHistory(groups, scales, path) {
-    groups.path.selectAll(".path").remove();
-    var lineFunction = d3.svg.line()
-               .x(function(d) { return scales.x(d.x + 0.5); })
-               .y(function(d) { return scales.y(d.y + 0.5); })
-               .interpolate("linear");
-
-    var lineGraph = groups.path.append("path")
-                              .attr("d", lineFunction(path))
-                              .attr("class", "path")
-                              .attr("fill", "none");
-
-    // position
-    var circleData = groups.position.selectAll("circle").data(path);
-    circleData.exit().remove();
-    var circles = circleData.enter().append("circle");
-    var circleAttributes = circles
-             .attr("cx", function (d) { return scales.x(d.x + 0.5); })
-             .attr("cy", function (d) { return scales.y(d.y + 0.5); })
-             .attr("r", function (d) { return circleRadius; })
-             .attr("class", "position");
+  
+  function drawEnemyDirection (enemyPosition){
+	enemy
+	  .attr("cx", scales.x(enemyPosition.x + 0.5))
+      .attr("cy", scales.y(enemyPosition.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemy");
   }
+   function enemyNextNext(){
+		
+		time++;
+		dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
+		distX = (enemyPosition.x-currentPosition.x);
+		distY = (enemyPosition.y - currentPosition.y);
+		var enemyNext;
+		
+			if (distX < distY){
+				
+				enemyNext = map.grid[enemyPosition.x][enemyPosition.y];
+				
+				console.log(distX);
+				console.log(distY);
+				//enemyPosition = enemyNext;
+				//drawEnemyDirection(enemyPosition);
+			}
+			else{
+				enemyNext = map.grid[enemyPosition.x][enemyPosition.y];
+				
+				//enemyPosition = enemyNext;
+				//drawEnemyDirection(enemyPosition);
+			}
+		
+		switch(enemyNext.type) {
+        case "grass":
+			enemyPosition = enemyNext;
+			drawEnemyDirection(enemyPosition);
+			//console.log(enemyPosition.x + ", " + enemyPosition.y);
+			
+          break;
+        case "rock":
+          enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+			drawEnemyDirection(enemyPosition);
+		break;
+		
+		}
+		// console.log(distX);
+		// console.log(distY);
+		// console.log(time);
+	
+
+   }
+   
+   function inGoal (){
+	goalDist = Math.sqrt(Math.pow((goalPosition.x-currentPosition.x),2) + Math.pow((goalPosition.y - currentPosition.y),2));
+	
+	if (goalDist == 0){
+		console.log("HURRAAAY!")
+	}
+	
+	//console.log(goalDist);
+   }
+
 
   function pickRandomPosition(map) {
     var grass = map.grass;
@@ -93,38 +132,52 @@ $(function() {
   function keyDownHandler(event){
     var key = event.which;
     var next;
+	//var enemyNext;
+
     // Let keypress handle displayable characters
       if(key>46){ return; }
 
       switch(key){
           case 37:  // left key
                 next =  map.grid[currentPosition.x-1][currentPosition.y];
+			//	enemyNext = map.grid[enemyPosition.x+1][enemyPosition.y];
+
                 break;
 
               case 39:  // right key 
                 next = map.grid[currentPosition.x+1][currentPosition.y];
+			//	enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y];
                 break;
 
                case 38: //up key
                 next = map.grid[currentPosition.x][currentPosition.y-1];
+				//enemyNext = map.grid[enemyPosition.x][enemyPosition.y+1];
                 break;
 
                case 40: //down key
                   next = map.grid[currentPosition.x][currentPosition.y+1];
+			//	  enemyNext = map.grid[enemyPosition.x][enemyPosition.y-1];
                 break;
 
               default:
                 break;
           }
           executeCommands(next);
+		  enemyNextNext();
+		  inGoal();
+
         }
 
   function executeCommands(next) {
       switch(next.type) {
         case "grass":
           currentPosition = next;
+			//enemyPosition = enemyNext;
           console.log(currentPosition.x + ", " + currentPosition.y);
           drawCurrentPosition(currentPosition);
+			//drawEnemyDirection(enemyPosition);
+			//console.log(enemyPosition.x + ", " + enemyPosition.y);
+			
           break;
         case "rock":
           // stay at the same place
@@ -135,18 +188,26 @@ $(function() {
         default:
           throw "Unexpected terrain type "+next.type;
       }
+	  
   }
 
   var squareLength = 18;
   var circleRadius = 8;
   var ratios = { rock:0.05, lava:0.05 };
   var gridSize = { x:40, y:35 };
+  var time = 0;
 
   var svgSize = getSvgSize(gridSize, squareLength);
   var map = buildMap(gridSize, ratios);
+  
   var start = pickRandomPosition(map);
+  var enemyStart = pickRandomPosition(map);
+  var goal = pickRandomPosition(map);
 
   var currentPosition = start;
+  var enemyPosition = enemyStart;
+  var goalPosition = goal;
+  
 
   var svgContainer = d3.select(".display")
                           .append("svg")
@@ -168,6 +229,22 @@ $(function() {
       .attr("cy", scales.y(start.y + 0.5))
       .attr("r", circleRadius)
       .attr("class", "position");
+	  
+	var enemy = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(enemyStart.x + 0.5))
+      .attr("cy", scales.y(enemyStart.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemy");
+	  
+	  var goal = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(goal.x + 0.5))
+      .attr("cy", scales.y(goal.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "goal");
 
 
 

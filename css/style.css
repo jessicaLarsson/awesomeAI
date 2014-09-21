@@ -1,18 +1,3 @@
-#gameArea {
-  height: 400px;
-  width: 800px;
-  
-  border: solid;
-  border-color: black;
-}
-
-#gameCanvas {
-	height: 100%;
-	width: 100%;
-	background-color: orange;
-}
-
-/*========================*/
 
 body {
     background-color: #EEEEEE;
@@ -62,12 +47,12 @@ svg {
 	stroke: #2973F2;
 }
 
-.positionNumber {
-	fill: #0E1A9E;
-	text-anchor: middle;
+.enemy {
+	fill: pink;
+	stroke-width: 3px;
+	stroke: black;
 }
 
-.path {
-	stroke-width: 3px;
-	stroke: #2973F2;
-}
+
+
+
