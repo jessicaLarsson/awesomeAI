@@ -68,60 +68,53 @@ $(function() {
       .attr("r", circleRadius)
       .attr("class", "enemy");
   }
-   function enemyNextNext(){
-		
-		time++;
-		dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
+   
+  function enemyNextNext(){
+		//dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
 		distX = (enemyPosition.x-currentPosition.x);
-		distY = (enemyPosition.y - currentPosition.y);
+		distY = (enemyPosition.y-currentPosition.y);
 		var enemyNext;
+
+    console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
 		
-			if (distX < distY){
-				
-				enemyNext = map.grid[enemyPosition.x][enemyPosition.y];
-				
-				console.log(distX);
-				console.log(distY);
-				//enemyPosition = enemyNext;
-				//drawEnemyDirection(enemyPosition);
+			if(Math.abs(distX) > Math.abs(distY)){		
+        var direction = distX/Math.abs(distX);	
+				enemyNext = map.grid[enemyPosition.x-direction][enemyPosition.y];
 			}
 			else{
-				enemyNext = map.grid[enemyPosition.x][enemyPosition.y];
-				
-				//enemyPosition = enemyNext;
-				//drawEnemyDirection(enemyPosition);
+        var direction = distY/Math.abs(distY); 
+				enemyNext = map.grid[enemyPosition.x][enemyPosition.y-direction];	
 			}
 		
 		switch(enemyNext.type) {
-        case "grass":
-			enemyPosition = enemyNext;
-			drawEnemyDirection(enemyPosition);
-			//console.log(enemyPosition.x + ", " + enemyPosition.y);
-			
-          break;
-        case "rock":
-          enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
-			drawEnemyDirection(enemyPosition);
-		break;
-		
+      case "grass":
+        enemyPosition = enemyNext;
+        drawEnemyDirection(enemyPosition);
+        break;
+      
+      case "rock":
+        enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+        drawEnemyDirection(enemyPosition);
+		    break;
+
 		}
-		// console.log(distX);
-		// console.log(distY);
-		// console.log(time);
-	
-
-   }
+    checkGameOver();
+  }
    
-   function inGoal (){
-	goalDist = Math.sqrt(Math.pow((goalPosition.x-currentPosition.x),2) + Math.pow((goalPosition.y - currentPosition.y),2));
-	
-	if (goalDist == 0){
-		console.log("HURRAAAY!")
-	}
-	
-	//console.log(goalDist);
-   }
+  function inGoal (){
+    var goalDist = goalPosition.x-currentPosition.x + goalPosition.y-currentPosition.y;
+    if (goalDist == 0){
+    	console.log("HURRAAAY!")
+    }
+  }
 
+  function checkGameOver(){
+    var enemyDist = enemyPosition.x-currentPosition.x + enemyPosition.y-currentPosition.y;
+    if(enemyDist == 0){
+      clearInterval(enemyMoveInterval);
+      console.log("GAME OVER LOSER!!");
+    }
+  }
 
   function pickRandomPosition(map) {
     var grass = map.grass;
@@ -132,7 +125,6 @@ $(function() {
   function keyDownHandler(event){
     var key = event.which;
     var next;
-	//var enemyNext;
 
     // Let keypress handle displayable characters
       if(key>46){ return; }
@@ -140,31 +132,25 @@ $(function() {
       switch(key){
           case 37:  // left key
                 next =  map.grid[currentPosition.x-1][currentPosition.y];
-			//	enemyNext = map.grid[enemyPosition.x+1][enemyPosition.y];
-
                 break;
 
               case 39:  // right key 
                 next = map.grid[currentPosition.x+1][currentPosition.y];
-			//	enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y];
                 break;
 
                case 38: //up key
                 next = map.grid[currentPosition.x][currentPosition.y-1];
-				//enemyNext = map.grid[enemyPosition.x][enemyPosition.y+1];
                 break;
 
                case 40: //down key
                   next = map.grid[currentPosition.x][currentPosition.y+1];
-			//	  enemyNext = map.grid[enemyPosition.x][enemyPosition.y-1];
                 break;
 
               default:
                 break;
           }
           executeCommands(next);
-		  enemyNextNext();
-		  inGoal();
+		      inGoal();
 
         }
 
@@ -172,28 +158,27 @@ $(function() {
       switch(next.type) {
         case "grass":
           currentPosition = next;
-			//enemyPosition = enemyNext;
-          console.log(currentPosition.x + ", " + currentPosition.y);
+          //console.log(currentPosition.x + ", " + currentPosition.y);
           drawCurrentPosition(currentPosition);
-			//drawEnemyDirection(enemyPosition);
-			//console.log(enemyPosition.x + ", " + enemyPosition.y);
-			
           break;
+        
         case "rock":
           // stay at the same place
           break;
+        
         case "lava":
           //någonting ska väl hända??
           return;
+        
         default:
           throw "Unexpected terrain type "+next.type;
       }
-	  
   }
 
   var squareLength = 18;
   var circleRadius = 8;
-  var ratios = { rock:0.05, lava:0.05 };
+  var ratios = { rock:0.00, lava:0.00 };
+  // var ratios = { rock:0.05, lava:0.05 }; 
   var gridSize = { x:40, y:35 };
   var time = 0;
 
@@ -247,8 +232,7 @@ $(function() {
       .attr("class", "goal");
 
 
-
-
   window.addEventListener("keydown", keyDownHandler, true);
+  var enemyMoveInterval = setInterval(function () {enemyNextNext()}, 300); 
   
 });
