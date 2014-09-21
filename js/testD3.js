@@ -102,14 +102,14 @@ $(function() {
   }
    
   function inGoal (){
-    var goalDist = goalPosition.x-currentPosition.x + goalPosition.y-currentPosition.y;
+    var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
     if (goalDist == 0){
     	console.log("HURRAAAY!")
     }
   }
 
   function checkGameOver(){
-    var enemyDist = enemyPosition.x-currentPosition.x + enemyPosition.y-currentPosition.y;
+    var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
     if(enemyDist == 0){
       clearInterval(enemyMoveInterval);
       console.log("GAME OVER LOSER!!");
