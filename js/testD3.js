@@ -71,10 +71,18 @@ $(function() {
       .attr("class", "enemy");
   }
    
+  function drawEnemyRandomDirection (blubb){
+    enemyRandom
+      .attr("cx", scales.x(blubb.x + 0.5))
+      .attr("cy", scales.y(blubb.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemyRandom");
+  }
+
   function enemyNextDistance(){
 		//dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
-		distX = (enemyPosition.x-currentPosition.x);
-		distY = (enemyPosition.y-currentPosition.y);
+		var distX = (enemyPosition.x-currentPosition.x);
+		var distY = (enemyPosition.y-currentPosition.y);
 		var enemyNext;
 
     //console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
@@ -104,6 +112,46 @@ $(function() {
 		}
     checkGameOver();
   }
+
+  function enemyRandomNext(){
+    if(enemyRandomPosition.x == enemyRandomDirection.x && enemyRandomPosition.y == enemyRandomDirection.y) {
+        enemyRandomDirection = pickRandomPosition(map);
+        
+    }
+    var distX = (enemyRandomPosition.x-enemyRandomDirection.x);
+    var distY = (enemyRandomPosition.y-enemyRandomDirection.y);
+    var enemyNext;
+
+      if(Math.abs(distX) > Math.abs(distY)){    
+        var direction = distX/Math.abs(distX);  
+        enemyNext = map.grid[enemyRandomPosition.x-direction][enemyRandomPosition.y];
+      }
+      else{
+        var direction = distY/Math.abs(distY); 
+        enemyNext = map.grid[enemyRandomPosition.x][enemyRandomPosition.y-direction]; 
+      }
+    
+    switch(enemyNext.type) {
+      case "grass":
+      case "lava":
+        enemyRandomPosition = enemyNext;
+        drawEnemyRandomDirection(enemyRandomPosition);
+        break;
+      
+      case "rock":
+        //enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+        enemyRandomDirection = pickRandomPosition(map);
+        drawEnemyRandomDirection(enemyRandomPosition);
+        break;
+
+    }
+    //checkGameOver();
+  }
+
+  function moveEnemies() {
+    enemyNextDistance();
+    enemyRandomNext();
+  }
    
   function inGoal (){
     var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
@@ -124,22 +172,14 @@ $(function() {
           .attr("cy", scales.y(goal.y + 0.5))
           .attr("r", circleRadius)
           .attr("class", "goal");
-		  
-		  if (points > 200)
-		  {
-
-		//var enemyMoveInterval = setInterval(function () {enemyNextNext()}, 300); 
-		  }
-
-
-
 
     }
   }
 
   function checkGameOver(){
     var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
-    if(enemyDist == 0){
+    var enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
+    if(enemyDist == 0 || enemyRandomDist == 0){
       clearInterval(enemyMoveInterval);
       alert("GAME OVER LOSER!!");
     }
@@ -204,25 +244,22 @@ $(function() {
       }
   }
 
+  //MAP
   var squareLength = 18;
   var circleRadius = 8;
-  //var ratios = { rock:0.00, lava:0.00 };
-   var ratios = { rock:0.05, lava:0.01 }; 
+  var ratios = { rock:0.05, lava:0.01 }; 
   var gridSize = { x:40, y:35 };
-  var time = 0;
-
   var svgSize = getSvgSize(gridSize, squareLength);
   var map = buildMap(gridSize, ratios);
-  
-  var start = pickRandomPosition(map);
-  var enemyStart = pickRandomPosition(map);
-  //var enemyStart2 = pickRandomPosition(map);
-  var goal = pickRandomPosition(map);
 
-  var currentPosition = start;
-  var enemyPosition = enemyStart;
-  //var enemyPosition2 = enemyStart2;
-  var goalPosition = goal;
+
+  var currentPosition = pickRandomPosition(map);;
+  var enemyPosition = pickRandomPosition(map);
+  
+  var enemyRandomPosition = pickRandomPosition(map);
+  var enemyRandomDirection = pickRandomPosition(map);
+
+  var goalPosition = pickRandomPosition(map);
   var points = 0;
   
 
@@ -242,37 +279,37 @@ $(function() {
   var player = svgContainer
       .append("g")
       .append("circle")
-      .attr("cx", scales.x(start.x + 0.5))
-      .attr("cy", scales.y(start.y + 0.5))
+      .attr("cx", scales.x(currentPosition.x + 0.5))
+      .attr("cy", scales.y(currentPosition.y + 0.5))
       .attr("r", circleRadius)
       .attr("class", "position");
 	  
 	var enemy = svgContainer
       .append("g")
       .append("circle")
-      .attr("cx", scales.x(enemyStart.x + 0.5))
-      .attr("cy", scales.y(enemyStart.y + 0.5))
+      .attr("cx", scales.x(enemyPosition.x + 0.5))
+      .attr("cy", scales.y(enemyPosition.y + 0.5))
       .attr("r", circleRadius)
       .attr("class", "enemy");	
 	  
-	  // var enemy2 = svgContainer
-      // .append("g")
-      // .append("circle")
-      // .attr("cx", scales.x(enemyStart.x + 0.5))
-      // .attr("cy", scales.y(enemyStart.y + 0.5))
-      // .attr("r", circleRadius)
-      // .attr("class", "enemy");
-	  
-	  var goal = svgContainer
+  var enemyRandom = svgContainer
       .append("g")
       .append("circle")
-      .attr("cx", scales.x(goal.x + 0.5))
-      .attr("cy", scales.y(goal.y + 0.5))
+      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
+      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemyRandom");
+ 
+	var goal = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(goalPosition.x + 0.5))
+      .attr("cy", scales.y(goalPosition.y + 0.5))
       .attr("r", circleRadius)
       .attr("class", "goal");
 
 
   window.addEventListener("keydown", keyDownHandler, true);
-  var enemyMoveInterval = setInterval(function () {enemyNextDistance()}, 300); 
+  var enemyMoveInterval = setInterval(function () {moveEnemies()}, 300); 
   
 });

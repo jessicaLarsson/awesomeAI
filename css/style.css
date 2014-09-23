@@ -53,6 +53,12 @@ svg {
 	stroke: black;
 }
 
+.enemyRandom {
+
+		fill: orange;
+	stroke-width: 3px;
+	stroke: black;
+}
 
 
 
