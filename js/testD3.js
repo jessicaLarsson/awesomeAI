@@ -104,7 +104,23 @@ $(function() {
   function inGoal (){
     var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
     if (goalDist == 0){
-    	console.log("HURRAAAY!")
+    	//console.log("HURRAAAY!")
+        points = points+100;
+        document.getElementById('points').innerHTML = '<br>Points: ' + points + '';
+        goal = pickRandomPosition(map);
+        goalPosition = goal;
+
+        goal = svgContainer
+          .append("g")
+          .append("circle")
+          .attr("cx", scales.x(goal.x + 0.5))
+          .attr("cy", scales.y(goal.y + 0.5))
+          .attr("r", circleRadius)
+          .attr("class", "goal");
+
+
+
+
     }
   }
 
@@ -112,7 +128,7 @@ $(function() {
     var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
     if(enemyDist == 0){
       clearInterval(enemyMoveInterval);
-      console.log("GAME OVER LOSER!!");
+      alert("GAME OVER LOSER!!");
     }
   }
 
@@ -192,6 +208,7 @@ $(function() {
   var currentPosition = start;
   var enemyPosition = enemyStart;
   var goalPosition = goal;
+  var points = 0;
   
 
   var svgContainer = d3.select(".display")
