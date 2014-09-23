@@ -69,7 +69,7 @@ $(function() {
       .attr("class", "enemy");
   }
    
-  function enemyNextNext(){
+  function enemyNextDistance(){
 		//dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
 		distX = (enemyPosition.x-currentPosition.x);
 		distY = (enemyPosition.y-currentPosition.y);
@@ -123,15 +123,7 @@ $(function() {
 		  
 		  if (points > 200)
 		  {
-		var enemy = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(enemyStart.x + 0.5))
-      .attr("cy", scales.y(enemyStart.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "enemy");
-	  
-		
+
 		//var enemyMoveInterval = setInterval(function () {enemyNextNext()}, 300); 
 		  }
 
@@ -220,10 +212,12 @@ $(function() {
   
   var start = pickRandomPosition(map);
   var enemyStart = pickRandomPosition(map);
+  //var enemyStart2 = pickRandomPosition(map);
   var goal = pickRandomPosition(map);
 
   var currentPosition = start;
   var enemyPosition = enemyStart;
+  //var enemyPosition2 = enemyStart2;
   var goalPosition = goal;
   var points = 0;
   
@@ -255,7 +249,15 @@ $(function() {
       .attr("cx", scales.x(enemyStart.x + 0.5))
       .attr("cy", scales.y(enemyStart.y + 0.5))
       .attr("r", circleRadius)
-      .attr("class", "enemy");
+      .attr("class", "enemy");	
+	  
+	  // var enemy2 = svgContainer
+      // .append("g")
+      // .append("circle")
+      // .attr("cx", scales.x(enemyStart.x + 0.5))
+      // .attr("cy", scales.y(enemyStart.y + 0.5))
+      // .attr("r", circleRadius)
+      // .attr("class", "enemy");
 	  
 	  var goal = svgContainer
       .append("g")
@@ -267,6 +269,6 @@ $(function() {
 
 
   window.addEventListener("keydown", keyDownHandler, true);
-  var enemyMoveInterval = setInterval(function () {enemyNextNext()}, 300); 
+  var enemyMoveInterval = setInterval(function () {enemyNextDistance()}, 300); 
   
 });
