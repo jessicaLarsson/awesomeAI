@@ -15,14 +15,16 @@ $(function() {
     for (x = 0; x < gridSize.x; x++) {
         map.grid[x] = [];
         for (y = 0; y < gridSize.y; y++) {
-            var rock = Math.random() < ratios.rock;
-            var lava = Math.random() < ratios.lava;
-            var type = isBorder(x, y, gridSize)?"rock":"grass";
-            if(rock) {
+            var type = "grass";
+            if(isBorder(x, y, gridSize)) {
               type = "rock";
-            }
-            if(lava) {
-              type = "lava";
+            } else {
+              if(Math.random() < ratios.rock) {
+                type = "rock";
+              }
+              if(Math.random() < ratios.lava) {
+                type = "lava";
+              }
             }
             var cell = { x:x, y:y , type:type };
             map.grid[x][y] = cell;
@@ -88,13 +90,15 @@ $(function() {
 		
 		switch(enemyNext.type) {
       case "grass":
+      case "lava":
         enemyPosition = enemyNext;
         drawEnemyDirection(enemyPosition);
         break;
       
       case "rock":
-        enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
-        drawEnemyDirection(enemyPosition);
+        //enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+        enemyPosition = enemyNext;
+        drawEnemyDirection(enemyNext);
 		    break;
 
 		}
@@ -202,8 +206,8 @@ $(function() {
 
   var squareLength = 18;
   var circleRadius = 8;
-  var ratios = { rock:0.00, lava:0.00 };
-  // var ratios = { rock:0.05, lava:0.05 }; 
+  //var ratios = { rock:0.00, lava:0.00 };
+   var ratios = { rock:0.05, lava:0.01 }; 
   var gridSize = { x:40, y:35 };
   var time = 0;
 
