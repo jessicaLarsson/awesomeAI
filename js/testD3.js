@@ -75,7 +75,7 @@ $(function() {
 		distY = (enemyPosition.y-currentPosition.y);
 		var enemyNext;
 
-    console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
+    //console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
 		
 			if(Math.abs(distX) > Math.abs(distY)){		
         var direction = distX/Math.abs(distX);	
@@ -107,6 +107,9 @@ $(function() {
     	//console.log("HURRAAAY!")
         points = points+100;
         document.getElementById('points').innerHTML = '<br>Points: ' + points + '';
+		
+		//New goal
+		goal.remove();
         goal = pickRandomPosition(map);
         goalPosition = goal;
 
@@ -117,6 +120,20 @@ $(function() {
           .attr("cy", scales.y(goal.y + 0.5))
           .attr("r", circleRadius)
           .attr("class", "goal");
+		  
+		  if (points > 200)
+		  {
+		var enemy = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(enemyStart.x + 0.5))
+      .attr("cy", scales.y(enemyStart.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemy");
+	  
+		
+		//var enemyMoveInterval = setInterval(function () {enemyNextNext()}, 300); 
+		  }
 
 
 
