@@ -23,27 +23,28 @@ svg {
 	border: 1px solid black;
 }
 
-.grass {
-	fill: #3CAB26;
-	stroke-width: 1px;
-	stroke: #2D801C;
+.path {
+	fill: #d3e6f4;
+	/*stroke-width: 1px;*/
+	/*stroke: #2D801C;*/
+	border: none !important;
 }
 
-.rock {
+.wall {
 	fill: #858585;
-	stroke-width: 1px;
-	stroke: #C7C7C7;
+	color: #d3e6f4;
+	/*stroke-width: 1px;*/
+	/*stroke: #C7C7C7;*/
 }
 
-.lava {
-	fill: #B3210B;
-	stroke-width: 1px;
-	stroke: #FF6600;
+.ice {
+	fill: #377fb5;
+
 }
 
 .position {
 	fill: #C9EBF0;
-	stroke-width: 3px;
+	/*stroke-width: 3px;*/
 	stroke: #2973F2;
 }
 
@@ -55,7 +56,7 @@ svg {
 
 .enemyRandom {
 
-		fill: orange;
+	fill: orange;
 	stroke-width: 3px;
 	stroke: black;
 }

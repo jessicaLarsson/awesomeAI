@@ -1,6 +1,6 @@
-$(function() {
+function view(){
 
-  function getSvgSize(gridSize, squareLength) {
+	function getSvgSize(gridSize, squareLength) {
     var width = gridSize.x * squareLength;
     var height = gridSize.y * squareLength;
     return { width:width, height:height };
@@ -10,28 +10,28 @@ $(function() {
     return x==0 || y == 0 || x == (gridSize.x-1) || y == (gridSize.y-1);
   }
 
-  function buildMap(gridSize, ratios) {
-    var map = { grid:[], grass:[], rock:[], lava:[] };
+  function buildboard(gridSize, ratios) {
+    var board = { grid:[], path:[], wall:[], ice:[] };
     for (x = 0; x < gridSize.x; x++) {
-        map.grid[x] = [];
+        board.grid[x] = [];
         for (y = 0; y < gridSize.y; y++) {
-            var type = "grass";
+            var type = "path";
             if(isBorder(x, y, gridSize)) {
-              type = "rock";
+              type = "wall";
             } else {
-              if(Math.random() < ratios.rock) {
-                type = "rock";
+              if(Math.random() < ratios.wall) {
+                type = "wall";
               }
-              if(Math.random() < ratios.lava) {
-                type = "lava";
+              if(Math.random() < ratios.ice) {
+                type = "ice";
               }
             }
             var cell = { x:x, y:y , type:type };
-            map.grid[x][y] = cell;
-            map[type].push(cell);
+            board.grid[x][y] = cell;
+            board[type].push(cell);
         }
     }
-    return map;
+    return board;
   }
 
   function getScale(gridSize, svgSize) {
@@ -51,6 +51,33 @@ $(function() {
              .attr("y", function (d) { return scales.y(d.y); })
              .attr("width", function (d) { return squareLength; })
              .attr("height", function (d) { return squareLength; })
+             .attr("class", cssClass);
+
+    // var cells = gridGroup.selectAll("circle")
+    //             .data(data)
+    //             .enter()
+    //             .append("circle");
+    // var cellAttributes = cells
+    //          .attr("cx", function (d) { return scales.x(d.x); })
+    //          .attr("cy", function (d) { return scales.y(d.y); })
+    //          .attr("r", circleRadius)
+             
+    //          .attr("class", cssClass);
+  }
+
+  function drawWall(svgContainer, scales, data, cssClass){
+    var gridGroup = svgContainer.append("g");
+
+    var cells = gridGroup.selectAll("circle")
+                .data(data)
+                .enter()
+                .append("circle");
+    var cellAttributes = cells
+    
+             .attr("cx", function (d) { return scales.x(d.x+0.5); })
+             .attr("cy", function (d) { return scales.y(d.y+0.5); })
+             .attr("r", circleRadius)
+             
              .attr("class", cssClass);
   }
 
@@ -95,22 +122,22 @@ $(function() {
 		
 			if(Math.abs(distX) > Math.abs(distY)){		
         var direction = distX/Math.abs(distX);	
-				enemyNext = map.grid[enemyPosition.x-direction][enemyPosition.y];
+				enemyNext = board.grid[enemyPosition.x-direction][enemyPosition.y];
 			}
 			else{
         var direction = distY/Math.abs(distY); 
-				enemyNext = map.grid[enemyPosition.x][enemyPosition.y-direction];	
+				enemyNext = board.grid[enemyPosition.x][enemyPosition.y-direction];	
 			}
 		
 		switch(enemyNext.type) {
-      case "grass":
-      case "lava":
+      case "path":
+      case "ice":
         enemyPosition = enemyNext;
         drawEnemyDirection(enemyPosition);
         break;
       
-      case "rock":
-        //enemyNext = map.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+      case "wall":
+        //enemyNext = board.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
         enemyPosition = enemyNext;
         drawEnemyDirection(enemyNext);
 		    break;
@@ -123,7 +150,7 @@ $(function() {
     console.log("enemyRandom = " + enemyRandom);
     console.log(enemyRandomPosition.x + ", " + enemyRandomPosition.y);
     if(enemyRandomPosition.x == enemyRandomDirection.x && enemyRandomPosition.y == enemyRandomDirection.y) {
-        enemyRandomDirection = pickRandomPosition(map);
+        enemyRandomDirection = pickRandomPosition(board);
         
     }
     var distX = (enemyRandomPosition.x-enemyRandomDirection.x);
@@ -132,22 +159,22 @@ $(function() {
 
       if(Math.abs(distX) > Math.abs(distY)){    
         var direction = distX/Math.abs(distX);  
-        enemyNext = map.grid[enemyRandomPosition.x-direction][enemyRandomPosition.y];
+        enemyNext = board.grid[enemyRandomPosition.x-direction][enemyRandomPosition.y];
       }
       else{
         var direction = distY/Math.abs(distY); 
-        enemyNext = map.grid[enemyRandomPosition.x][enemyRandomPosition.y-direction]; 
+        enemyNext = board.grid[enemyRandomPosition.x][enemyRandomPosition.y-direction]; 
       }
     
     switch(enemyNext.type) {
-      case "grass":
-      case "lava":
+      case "path":
+      case "ice":
         enemyRandomPosition = enemyNext;
         drawEnemyRandomDirection(enemyRandomPosition);
         break;
       
-      case "rock":
-        enemyRandomDirection = pickRandomPosition(map);
+      case "wall":
+        enemyRandomDirection = pickRandomPosition(board);
         drawEnemyRandomDirection(enemyRandomPosition);
         break;
 
@@ -155,7 +182,7 @@ $(function() {
     //checkGameOver();
   }
 
-  function moveEnemies() {
+  this.moveEnemies = function() {
     
     if(document.getElementById('pathCheckBox').checked == true) {
       enemyNextDistance();
@@ -180,7 +207,7 @@ $(function() {
 		
 		//New goal
 		goal.remove();
-    goal = pickRandomPosition(map);
+    goal = pickRandomPosition(board);
     goalPosition = goal;
 
     goal = svgContainer
@@ -205,17 +232,17 @@ $(function() {
 
     if(enemyDist == 0 || enemyRandomDist == 0){
       clearInterval(enemyMoveInterval);
-      alert("GAME OVER LOSER!!");
+      alert("GAME OVER - Christmas is ruined!!");
     }
   }
 
-  function pickRandomPosition(map) {
-    var grass = map.grass;
-    var i = Math.ceil(Math.random() * grass.length);
-    return grass[i];
+  function pickRandomPosition(board) {
+    var path = board.path;
+    var i = Math.ceil(Math.random() * path.length);
+    return path[i];
   }
 
-  function keyDownHandler(event){
+  this.keyDownHandler = function(event){
     var key = event.which;
     var next;
 
@@ -224,19 +251,19 @@ $(function() {
 
       switch(key){
           case 37:  // left key
-                next =  map.grid[currentPosition.x-1][currentPosition.y];
+                next =  board.grid[currentPosition.x-1][currentPosition.y];
                 break;
 
               case 39:  // right key 
-                next = map.grid[currentPosition.x+1][currentPosition.y];
+                next = board.grid[currentPosition.x+1][currentPosition.y];
                 break;
 
                case 38: //up key
-                next = map.grid[currentPosition.x][currentPosition.y-1];
+                next = board.grid[currentPosition.x][currentPosition.y-1];
                 break;
 
                case 40: //down key
-                  next = map.grid[currentPosition.x][currentPosition.y+1];
+                  next = board.grid[currentPosition.x][currentPosition.y+1];
                 break;
 
               default:
@@ -249,17 +276,17 @@ $(function() {
 
   function executeCommands(next) {
       switch(next.type) {
-        case "grass":
+        case "path":
           currentPosition = next;
           //console.log(currentPosition.x + ", " + currentPosition.y);
           drawCurrentPosition(currentPosition);
           break;
         
-        case "rock":
+        case "wall":
           // stay at the same place
           break;
         
-        case "lava":
+        case "ice":
           //någonting ska väl hända??
           return;
         
@@ -268,67 +295,81 @@ $(function() {
       }
   }
 
-  //MAP
-  var squareLength = 18;
-  var circleRadius = 8;
-  var ratios = { rock:0.05, lava:0.01 }; 
-  var gridSize = { x:40, y:35 };
-  var svgSize = getSvgSize(gridSize, squareLength);
-  var map = buildMap(gridSize, ratios);
-  var svgContainer = d3.select(".display")
-                          .append("svg")
-                            .attr("width", svgSize.width)
-                            .attr("height", svgSize.height);
-  var scales = getScale(gridSize, svgSize);
-  drawCells(svgContainer, scales, map.grass, "grass");
-  drawCells(svgContainer, scales, map.rock, "rock");
-  drawCells(svgContainer, scales, map.lava, "lava");
+  this.createBoard = function(){
+	  squareLength = 18;
+	  circleRadius = 9;
+	  ratios = { wall:0.05, ice:0.01 }; 
+	   gridSize = { x:40, y:35 };
+	   svgSize = getSvgSize(gridSize, squareLength);
+	   board = buildboard(gridSize, ratios);
+	   svgContainer = d3.select(".display")
+	                          .append("svg")
+	                            .attr("width", svgSize.width)
+	                            .attr("height", svgSize.height);
+	   scales = getScale(gridSize, svgSize);
+	  drawCells(svgContainer, scales, board.path, "path");
+	  drawWall(svgContainer, scales, board.wall, "wall");
+	  drawCells(svgContainer, scales, board.ice, "ice");
 
-  var groups = { path:svgContainer.append("g"),
-                  position:svgContainer.append("g") };
+	   groups = { path:svgContainer.append("g"),
+	                  position:svgContainer.append("g") };
 
-  //shortest path enemy
-  var currentPosition = pickRandomPosition(map);;
-  var enemyPosition = pickRandomPosition(map);
-  var enemy = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(enemyPosition.x + 0.5))
-      .attr("cy", scales.y(enemyPosition.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "enemy");  
-  
-  //random enemy
-  var enemyRandomPosition = pickRandomPosition(map);
-  var enemyRandomDirection = pickRandomPosition(map);
-  var enemyRandom = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
-      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "enemyRandom");
-
-  var goalPosition = pickRandomPosition(map);
-  var points = 0;
-  var goal = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(goalPosition.x + 0.5))
-      .attr("cy", scales.y(goalPosition.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "goal");
-
-   
-  var player = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(currentPosition.x + 0.5))
-      .attr("cy", scales.y(currentPosition.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "position");
 	  
-  window.addEventListener("keydown", keyDownHandler, true);
-  var enemyMoveInterval = setInterval(function () {moveEnemies()}, 300); 
-  
-});
+
+	   goalPosition = pickRandomPosition(board);
+	   points = 0;
+	   goal = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(goalPosition.x + 0.5))
+	      .attr("cy", scales.y(goalPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "goal");
+
+}
+
+this.createRandomEnemy = function(){
+
+	   enemyRandomPosition = pickRandomPosition(board);
+	   enemyRandomDirection = pickRandomPosition(board);
+	   enemyRandom = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
+	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "enemyRandom");
+}
+
+this.createShortestPathEnemy = function(){
+	   enemyPosition = pickRandomPosition(board);
+	   enemy = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(enemyPosition.x + 0.5))
+	      .attr("cy", scales.y(enemyPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "enemy");  
+	  
+	  
+}
+
+this.createPlayer = function() {
+	currentPosition = pickRandomPosition(board);
+	player = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(currentPosition.x + 0.5))
+	      .attr("cy", scales.y(currentPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "position");
+		  
+	  
+}
+
+
+
+
+
+
+}
