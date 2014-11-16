@@ -352,8 +352,8 @@ function view(){
       switch(next.type) {
         case "path":
           currentPosition = next;
-          //console.log(currentPosition.x + ", " + currentPosition.y);
           drawCurrentPosition(currentPosition);
+          checkSantaStatus();
           checkGameOver();
           break;
         
@@ -368,6 +368,15 @@ function view(){
         default:
           throw "Unexpected terrain type "+next.type;
       }
+  }
+
+  function checkSantaStatus(){
+    if(true){ //if holding a present
+      if(currentPosition.x == santaPosition.x && currentPosition.y == santaPosition.y){
+        //give santa present
+        console.log("hello santa, here is a present :) ");
+      }
+    }
   }
 
   this.createBoard = function(){
@@ -404,58 +413,67 @@ function view(){
 
 }
 
-this.createRandomEnemy = function(){
+  this.createRandomEnemy = function(){
 
-	   enemyRandomPosition = pickRandomPosition(board);
-	   enemyRandomDirection = pickRandomPosition(board);
-	   enemyRandom = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
-	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "enemyRandom");
-}
+  	   enemyRandomPosition = pickRandomPosition(board);
+  	   enemyRandomDirection = pickRandomPosition(board);
+  	   enemyRandom = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
+  	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "enemyRandom");
+  }
 
-this.createShortestPathEnemy = function(){
-	   enemyPosition = pickRandomPosition(board);
-	   enemy = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(enemyPosition.x + 0.5))
-	      .attr("cy", scales.y(enemyPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "enemy");  
-	  
-	  
-}
+  this.createShortestPathEnemy = function(){
+  	   enemyPosition = pickRandomPosition(board);
+  	   enemy = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(enemyPosition.x + 0.5))
+  	      .attr("cy", scales.y(enemyPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "enemy");  
+  	  
+  	  
+  }
 
-this.createGoalEnemy = function(){
-     enemyGoalPosition = pickRandomPosition(board);
-     enemyGoal = svgContainer
-        .append("g")
-        .append("circle")
-        .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
-        .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
-        .attr("r", circleRadius)
-        .attr("class", "enemyGoal");  
-    
-    
-}
+  this.createGoalEnemy = function(){
+       enemyGoalPosition = pickRandomPosition(board);
+       enemyGoal = svgContainer
+          .append("g")
+          .append("circle")
+          .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
+          .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
+          .attr("r", circleRadius)
+          .attr("class", "enemyGoal");  
+      
+      
+  }
 
-this.createPlayer = function() {
-	currentPosition = pickRandomPosition(board);
-  playerDirection = {x:0, y:0}
-	player = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(currentPosition.x + 0.5))
-	      .attr("cy", scales.y(currentPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "position");
-		  
-	  
-}
+  this.createPlayer = function() {
+  	currentPosition = pickRandomPosition(board);
+    playerDirection = {x:0, y:0}
+  	player = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(currentPosition.x + 0.5))
+  	      .attr("cy", scales.y(currentPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "position");
+  }
+
+  this.createSanta = function(){
+    santaPosition = pickRandomPosition(board);
+    santa = svgContainer
+          .append("g")
+          .append("circle")
+          .attr("cx", scales.x(santaPosition.x + 0.5))
+          .attr("cy", scales.y(santaPosition.y + 0.5))
+          .attr("r", circleRadius)
+          .attr("class", "santa");
+  }
 
 
 

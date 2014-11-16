@@ -5,7 +5,7 @@ game.createRandomEnemy();
 document.getElementById('level').innerHTML = '<br>level: ' + level + '';
 
 
-
+game.createSanta();
 game.createPlayer();
 
 window.addEventListener("keydown", game.keyDownHandler, true);

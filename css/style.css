@@ -42,6 +42,12 @@ svg {
 
 }
 
+.santa{
+	fill: white;
+	stroke-width: 10px;
+	stroke: red;
+}
+
 .position {
 	fill: #C9EBF0;
 	/*stroke-width: 3px;*/
