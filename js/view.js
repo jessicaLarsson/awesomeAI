@@ -53,16 +53,6 @@ function view(){
              .attr("height", function (d) { return squareLength; })
              .attr("class", cssClass);
 
-    // var cells = gridGroup.selectAll("circle")
-    //             .data(data)
-    //             .enter()
-    //             .append("circle");
-    // var cellAttributes = cells
-    //          .attr("cx", function (d) { return scales.x(d.x); })
-    //          .attr("cy", function (d) { return scales.y(d.y); })
-    //          .attr("r", circleRadius)
-             
-    //          .attr("class", cssClass);
   }
 
   function drawWall(svgContainer, scales, data, cssClass){
@@ -99,6 +89,17 @@ function view(){
     .attr("cy", scales.y(enemyPosition.y + 0.5))
     .attr("r", circleRadius)
     .attr("class", "enemy");
+  }
+
+  function drawEnemyGoalDirection (blubb){
+    enemyGoal.remove();
+    enemyGoal = svgContainer
+      .append("g")
+      .append("circle")
+      .attr("cx", scales.x(blubb.x + 0.5))
+      .attr("cy", scales.y(blubb.y + 0.5))
+      .attr("r", circleRadius)
+      .attr("class", "enemyGoal");
   }
    
   function drawEnemyRandomDirection (blubb){
@@ -143,12 +144,12 @@ function view(){
 		    break;
 
 		}
-    checkGameOver();
+   // checkGameOver();
   }
 
   function enemyRandomNext(){
-    console.log("enemyRandom = " + enemyRandom);
-    console.log(enemyRandomPosition.x + ", " + enemyRandomPosition.y);
+    //console.log("enemyRandom = " + enemyRandom);
+    //console.log(enemyRandomPosition.x + ", " + enemyRandomPosition.y);
     if(enemyRandomPosition.x == enemyRandomDirection.x && enemyRandomPosition.y == enemyRandomDirection.y) {
         enemyRandomDirection = pickRandomPosition(board);
         
@@ -179,23 +180,56 @@ function view(){
         break;
 
     }
+
+    //console.log(enemyRandomPosition);
     //checkGameOver();
+  }
+
+  function enemyNextGoal(){
+    //dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
+    var distX = (enemyGoalPosition.x-currentPosition.x);
+    var distY = (enemyGoalPosition.y-currentPosition.y);
+    var enemyGoalNext;
+
+    //console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
+    
+      if(Math.abs(distX) > Math.abs(distY)){    
+        var direction = distX/Math.abs(distX);  
+        enemyGoalNext = board.grid[enemyGoalPosition.x-direction][enemyGoalPosition.y];
+      }
+      else{
+        var direction = distY/Math.abs(distY); 
+        enemyGoalNext = board.grid[enemyGoalPosition.x][enemyGoalPosition.y-direction]; 
+      }
+    
+    switch(enemyGoalNext.type) {
+      case "path":
+      case "ice":
+        enemyGoalPosition = enemyGoalNext;
+        drawEnemyGoalDirection(enemyGoalPosition);
+        break;
+      
+      case "wall":
+        //enemyNext = board.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
+        enemyGoalPosition = enemyGoalNext;
+        drawEnemyGoalDirection(enemyGoalNext);
+        break;
+
+    }
   }
 
   this.moveEnemies = function() {
     
-    if(document.getElementById('pathCheckBox').checked == true) {
+    enemyRandomNext();
+
+    if(level > 1) {
       enemyNextDistance();
-    } else {
-      enemy.remove();
+    }
+    if(level > 2) {
+      enemyNextGoal();
     }
     
-    //random enemy
-    if(document.getElementById('randomCheckBox').checked == true) {
-      enemyRandomNext();
-    }  else {
-      enemyRandom.remove();
-    }
+    checkGameOver();
     
   }
    
@@ -218,19 +252,49 @@ function view(){
       .attr("r", circleRadius)
       .attr("class", "goal");
 
+
+      level++;
+      setLevel(level);
+    }
+  }
+
+  function setLevel(level) {
+    if(level == 2) {
+      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
+      game.createShortestPathEnemy();
+    }
+    if(level == 3) {
+      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
+      game.createGoalEnemy();
     }
   }
 
   function checkGameOver(){
-    var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
-    
-    if(document.getElementById('randomCheckBox').checked == true) {
-       enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
-    } else {
-      enemyRandomDist = 1; //make the distance !=0
-    }
 
-    if(enemyDist == 0 || enemyRandomDist == 0){
+    var enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
+    
+    if(level > 1) {
+      var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
+
+    } else {
+      var enemyNextDistance = 1;
+    }
+    if(level > 2) {
+      var enemyGoalDist = Math.abs(enemyGoalPosition.x-currentPosition.x) + Math.abs(enemyGoalPosition.y-currentPosition.y);
+    } else var enemyGoalDist = 1;
+    
+    
+
+    // if(document.getElementById('randomCheckBox').checked == true) {
+    //    enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
+    // } else {
+    //   enemyRandomDist = 1; //make the distance !=0
+    // }
+    //console.log("enemyRandomDist = " + enemyRandomDist);
+
+     //console.log("currentPosition.x = " + currentPosition.x);
+     //console.log(currentPosition.x);
+    if(enemyDist == 0 || enemyRandomDist == 0 || enemyGoalDist == 0){
       clearInterval(enemyMoveInterval);
       alert("GAME OVER - Christmas is ruined!!");
     }
@@ -280,6 +344,7 @@ function view(){
           currentPosition = next;
           //console.log(currentPosition.x + ", " + currentPosition.y);
           drawCurrentPosition(currentPosition);
+          checkGameOver();
           break;
         
         case "wall":
@@ -296,9 +361,10 @@ function view(){
   }
 
   this.createBoard = function(){
+    console.log("level = " + level);
 	  squareLength = 18;
 	  circleRadius = 9;
-	  ratios = { wall:0.05, ice:0.01 }; 
+	  ratios = { wall:0.2, ice:0.01 }; 
 	   gridSize = { x:40, y:35 };
 	   svgSize = getSvgSize(gridSize, squareLength);
 	   board = buildboard(gridSize, ratios);
@@ -352,6 +418,19 @@ this.createShortestPathEnemy = function(){
 	      .attr("class", "enemy");  
 	  
 	  
+}
+
+this.createGoalEnemy = function(){
+     enemyGoalPosition = pickRandomPosition(board);
+     enemyGoal = svgContainer
+        .append("g")
+        .append("circle")
+        .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
+        .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
+        .attr("r", circleRadius)
+        .attr("class", "enemyGoal");  
+    
+    
 }
 
 this.createPlayer = function() {

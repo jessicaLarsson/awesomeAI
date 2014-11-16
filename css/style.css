@@ -61,5 +61,11 @@ svg {
 	stroke: black;
 }
 
+.enemyGoal {
+	fill: green;
+	stroke-width: 3px;
+	stroke: black;
+}
+
 
 
