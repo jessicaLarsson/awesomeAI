@@ -186,12 +186,15 @@ function view(){
   }
 
   function enemyNextGoal(){
-    //dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
-    var distX = (enemyGoalPosition.x-currentPosition.x);
-    var distY = (enemyGoalPosition.y-currentPosition.y);
+    var distX = (enemyGoalPosition.x-(currentPosition.x + playerDirection.x*10));
+    var distY = (enemyGoalPosition.y-(currentPosition.y + playerDirection.y*10));
+    if(distX && distY < 10){
+      distX = (enemyGoalPosition.x-currentPosition.x);
+      distY = (enemyGoalPosition.y-currentPosition.y);
+    }
+
     var enemyGoalNext;
 
-    //console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
     
       if(Math.abs(distX) > Math.abs(distY)){    
         var direction = distX/Math.abs(distX);  
@@ -210,7 +213,6 @@ function view(){
         break;
       
       case "wall":
-        //enemyNext = board.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
         enemyGoalPosition = enemyGoalNext;
         drawEnemyGoalDirection(enemyGoalNext);
         break;
@@ -313,25 +315,33 @@ function view(){
     // Let keypress handle displayable characters
       if(key>46){ return; }
 
-      switch(key){
+        switch(key){
           case 37:  // left key
-                next =  board.grid[currentPosition.x-1][currentPosition.y];
-                break;
+              next =  board.grid[currentPosition.x-1][currentPosition.y];
+              playerDirection.x = -1;
+              playerDirection.y = 0;
+              break;
 
-              case 39:  // right key 
+            case 39:  // right key 
                 next = board.grid[currentPosition.x+1][currentPosition.y];
-                break;
+                playerDirection.x = 1;
+                playerDirection.y = 0;
+              break;
 
-               case 38: //up key
+             case 38: //up key
                 next = board.grid[currentPosition.x][currentPosition.y-1];
-                break;
+                playerDirection.x = 0;
+                playerDirection.y = -1;
+              break;
 
-               case 40: //down key
-                  next = board.grid[currentPosition.x][currentPosition.y+1];
-                break;
+             case 40: //down key
+                next = board.grid[currentPosition.x][currentPosition.y+1];
+                playerDirection.x = 0;
+                playerDirection.y = 1;
+              break;
 
-              default:
-                break;
+            default:
+              break;
           }
           executeCommands(next);
 		      inGoal();
@@ -364,7 +374,7 @@ function view(){
     console.log("level = " + level);
 	  squareLength = 18;
 	  circleRadius = 9;
-	  ratios = { wall:0.2, ice:0.01 }; 
+	  ratios = { wall:0.1, ice:0.01 }; 
 	   gridSize = { x:40, y:35 };
 	   svgSize = getSvgSize(gridSize, squareLength);
 	   board = buildboard(gridSize, ratios);
@@ -435,6 +445,7 @@ this.createGoalEnemy = function(){
 
 this.createPlayer = function() {
 	currentPosition = pickRandomPosition(board);
+  playerDirection = {x:0, y:0}
 	player = svgContainer
 	      .append("g")
 	      .append("circle")
