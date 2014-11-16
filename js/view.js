@@ -147,11 +147,12 @@ function view(){
    // checkGameOver();
   }
 
-  function enemyRandomNext(){
+  this.enemyRandomNext = function(){
     //console.log("enemyRandom = " + enemyRandom);
     //console.log(enemyRandomPosition.x + ", " + enemyRandomPosition.y);
     if(enemyRandomPosition.x == enemyRandomDirection.x && enemyRandomPosition.y == enemyRandomDirection.y) {
-        enemyRandomDirection = pickRandomPosition(board);
+
+        enemyRandomDirection = this.pickRandomPosition(board);
         
     }
     var distX = (enemyRandomPosition.x-enemyRandomDirection.x);
@@ -175,7 +176,7 @@ function view(){
         break;
       
       case "wall":
-        enemyRandomDirection = pickRandomPosition(board);
+        enemyRandomDirection = this.pickRandomPosition(board);
         drawEnemyRandomDirection(enemyRandomPosition);
         break;
 
@@ -222,7 +223,7 @@ function view(){
 
   this.moveEnemies = function() {
     
-    enemyRandomNext();
+    this.enemyRandomNext();
 
     if(level > 1) {
       enemyNextDistance();
@@ -243,7 +244,7 @@ function view(){
 		
 		//New goal
 		goal.remove();
-    goal = pickRandomPosition(board);
+    goal = this.pickRandomPosition(board);
     goalPosition = goal;
 
     goal = svgContainer
@@ -302,7 +303,7 @@ function view(){
     }
   }
 
-  function pickRandomPosition(board) {
+  this.pickRandomPosition = function(board) {
     var path = board.path;
     var i = Math.ceil(Math.random() * path.length);
     return path[i];
@@ -380,7 +381,7 @@ function view(){
   }
 
   this.createBoard = function(){
-    console.log("level = " + level);
+    //console.log("level = " + level);
 	  squareLength = 18;
 	  circleRadius = 9;
 	  ratios = { wall:0.1, ice:0.01 }; 
@@ -399,73 +400,23 @@ function view(){
 	   groups = { path:svgContainer.append("g"),
 	                  position:svgContainer.append("g") };
 
-	  
-
-	   goalPosition = pickRandomPosition(board);
+	   //goalPosition = this.pickRandomPosition(board);
 	   points = 0;
-	   goal = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(goalPosition.x + 0.5))
-	      .attr("cy", scales.y(goalPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "goal");
+	   // goal = svgContainer
+	   //    .append("g")
+	   //    .append("circle")
+	   //    .attr("cx", scales.x(goalPosition.x + 0.5))
+	   //    .attr("cy", scales.y(goalPosition.y + 0.5))
+	   //    .attr("r", circleRadius)
+	   //    .attr("class", "goal");
+
+
+
 
 }
 
-  this.createRandomEnemy = function(){
-
-  	   enemyRandomPosition = pickRandomPosition(board);
-  	   enemyRandomDirection = pickRandomPosition(board);
-  	   enemyRandom = svgContainer
-  	      .append("g")
-  	      .append("circle")
-  	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
-  	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
-  	      .attr("r", circleRadius)
-  	      .attr("class", "enemyRandom");
-  }
-
-  this.createShortestPathEnemy = function(){
-  	   enemyPosition = pickRandomPosition(board);
-  	   enemy = svgContainer
-  	      .append("g")
-  	      .append("circle")
-  	      .attr("cx", scales.x(enemyPosition.x + 0.5))
-  	      .attr("cy", scales.y(enemyPosition.y + 0.5))
-  	      .attr("r", circleRadius)
-  	      .attr("class", "enemy");  
-  	  
-  	  
-  }
-
-  this.createGoalEnemy = function(){
-       enemyGoalPosition = pickRandomPosition(board);
-       enemyGoal = svgContainer
-          .append("g")
-          .append("circle")
-          .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
-          .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
-          .attr("r", circleRadius)
-          .attr("class", "enemyGoal");  
-      
-      
-  }
-
-  this.createPlayer = function() {
-  	currentPosition = pickRandomPosition(board);
-    playerDirection = {x:0, y:0}
-  	player = svgContainer
-  	      .append("g")
-  	      .append("circle")
-  	      .attr("cx", scales.x(currentPosition.x + 0.5))
-  	      .attr("cy", scales.y(currentPosition.y + 0.5))
-  	      .attr("r", circleRadius)
-  	      .attr("class", "position");
-  }
-
   this.createSanta = function(){
-    santaPosition = pickRandomPosition(board);
+    santaPosition = this.pickRandomPosition(board);
     santa = svgContainer
           .append("g")
           .append("circle")
@@ -474,6 +425,59 @@ function view(){
           .attr("r", circleRadius)
           .attr("class", "santa");
   }
+
+
+this.createRandomEnemy = function(){
+	   enemyRandomPosition = this.pickRandomPosition(board);
+	   enemyRandomDirection = this.pickRandomPosition(board);
+	   enemyRandom = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
+	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "enemyRandom");
+}
+
+this.createShortestPathEnemy = function(){
+	   enemyPosition = this.pickRandomPosition(board);
+	   enemy = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(enemyPosition.x + 0.5))
+	      .attr("cy", scales.y(enemyPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "enemy");  
+	  
+	  
+}
+
+this.createGoalEnemy = function(){
+     enemyGoalPosition = this.pickRandomPosition(board);
+     enemyGoal = svgContainer
+        .append("g")
+        .append("circle")
+        .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
+        .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
+        .attr("r", circleRadius)
+        .attr("class", "enemyGoal");  
+    
+    
+}
+
+this.createPlayer = function() {
+	currentPosition = this.pickRandomPosition(board);
+  playerDirection = {x:0, y:0}
+	player = svgContainer
+	      .append("g")
+	      .append("circle")
+	      .attr("cx", scales.x(currentPosition.x + 0.5))
+	      .attr("cy", scales.y(currentPosition.y + 0.5))
+	      .attr("r", circleRadius)
+	      .attr("class", "position");
+		  
+	  
+}
 
 
 
