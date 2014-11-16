@@ -7,7 +7,7 @@ function present () {
 
 
 	this.drawPresent = function (){
-		this.svgElement
+		this.svgElement = svgContainer
 	      .append("g")
 	      .append("circle")
 	      .attr("cx", scales.x(this.x + 0.5))
@@ -19,7 +19,7 @@ function present () {
 	this.pickedUpAction = function () {
 		this.pickedUp = true;
 		console.log("whahaha ");
-		//this.svgElement.remove();
+		this.svgElement.remove();
 		//gör nåt med gubben, typ ändra färg 
 	}
 

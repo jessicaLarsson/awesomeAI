@@ -405,15 +405,6 @@ function view(){
 
 
 }
-// function present () {
-//   var pos = pickRandomPosition(board);
-//   this.x = pos.x;
-//   this.y = pos.y;
-//   this.pickedUp = false;
-
-//   console.log("i present.js -> this.x = " + this.x);
-// }
-
 
 this.createRandomEnemy = function(){
 
@@ -454,7 +445,7 @@ this.createGoalEnemy = function(){
     
 }
 
-this.createPlayer = function() {
+this.createPlayer = function(){
 	currentPosition = this.pickRandomPosition(board);
   playerDirection = {x:0, y:0}
 	player = svgContainer
@@ -467,10 +458,5 @@ this.createPlayer = function() {
 		  
 	  
 }
-
-
-
-
-
 
 }
