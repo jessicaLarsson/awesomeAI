@@ -465,7 +465,7 @@ this.createGoalEnemy = function(){
     
 }
 
-this.createPlayer = function() {
+this.createPlayer = function(){
 	currentPosition = this.pickRandomPosition(board);
   playerDirection = {x:0, y:0}
 	player = svgContainer
@@ -478,10 +478,5 @@ this.createPlayer = function() {
 		  
 	  
 }
-
-
-
-
-
 
 }
