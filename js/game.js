@@ -35,7 +35,7 @@ function createPresents(amountOfPresents) {
 
 }
 
-
+}
 function checkIfDone() {
 	if(pickedUpPresents == amountOfPresents && !playerHasPresent) {
 		level++;
