@@ -54,6 +54,12 @@ svg {
 	stroke: #2973F2;
 }
 
+.gotPresent {
+	fill: green;
+	/*stroke-width: 3px;*/
+	stroke: #2973F2;
+}
+
 .enemy {
 	fill: pink;
 	stroke-width: 3px;

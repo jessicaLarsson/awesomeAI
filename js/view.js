@@ -166,7 +166,7 @@ function view(){
 		    break;
 
 		}
-   // checkGameOver();
+ 
   }
 
   this.enemyRandomNext = function(){
@@ -201,11 +201,7 @@ function view(){
         enemyRandomDirection = this.pickRandomPosition(board);
         drawEnemyRandomDirection(enemyRandomPosition);
         break;
-
     }
-
-    //console.log(enemyRandomPosition);
-    //checkGameOver();
   }
 
   function enemyNextGoal(){
@@ -254,47 +250,38 @@ function view(){
       enemyNextGoal();
     }
     
-    checkGameOver();
+    checkEnemyCollision();
     
   }
    
-  function inGoal (){
-    var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
-    if (goalDist == 0){
-        points = points+100;
-        document.getElementById('points').innerHTML = '<br>Points: ' + points + '';
+  // function inGoal (){
+  //   var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
+  //   if (goalDist == 0){
+  //       points = points+100;
+  //       document.getElementById('points').innerHTML = '<br>Points: ' + points + '';
 		
-		//New goal
-		goal.remove();
-    goal = this.pickRandomPosition(board);
-    goalPosition = goal;
+		// //New goal
+		// goal.remove();
+  //   goal = this.pickRandomPosition(board);
+  //   goalPosition = goal;
 
-    goal = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(goal.x + 0.5))
-      .attr("cy", scales.y(goal.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "goal");
+  //   goal = svgContainer
+  //     .append("g")
+  //     .append("circle")
+  //     .attr("cx", scales.x(goal.x + 0.5))
+  //     .attr("cy", scales.y(goal.y + 0.5))
+  //     .attr("r", circleRadius)
+  //     .attr("class", "goal");
 
 
-      level++;
-      setLevel(level);
-    }
-  }
+  //     level++;
+  //     setLevel(level);
+  //   }
+  // }
 
-  function setLevel(level) {
-    if(level == 2) {
-      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
-      game.createShortestPathEnemy();
-    }
-    if(level == 3) {
-      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
-      game.createGoalEnemy();
-    }
-  }
 
-  function checkGameOver(){
+
+  function checkEnemyCollision(){
 
     var enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
     
@@ -308,20 +295,18 @@ function view(){
       var enemyGoalDist = Math.abs(enemyGoalPosition.x-currentPosition.x) + Math.abs(enemyGoalPosition.y-currentPosition.y);
     } else var enemyGoalDist = 1;
     
-    
-
-    // if(document.getElementById('randomCheckBox').checked == true) {
-    //    enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
-    // } else {
-    //   enemyRandomDist = 1; //make the distance !=0
-    // }
-    //console.log("enemyRandomDist = " + enemyRandomDist);
-
-     //console.log("currentPosition.x = " + currentPosition.x);
-     //console.log(currentPosition.x);
     if(enemyDist == 0 || enemyRandomDist == 0 || enemyGoalDist == 0){
-      clearInterval(enemyMoveInterval);
-      alert("GAME OVER - Christmas is ruined!!");
+      if(playerHasPresent) {
+        playerHasPresent = false;
+        document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b>Oh no! You lost the present! Quick get all the others!';
+        
+      } else {
+        alert("GAME OVER - Christmas is ruined!!");
+        clearInterval(enemyMoveInterval);
+
+      }
+      
+      
     }
   }
 
@@ -367,8 +352,6 @@ function view(){
               break;
           }
           executeCommands(next);
-		      inGoal();
-
         }
 
   function executeCommands(next) {
@@ -377,7 +360,7 @@ function view(){
           currentPosition = next;
           drawCurrentPosition(currentPosition);
           checkSantaStatus();
-          checkGameOver();
+          checkEnemyCollision();
           break;
         
         case "wall":
@@ -390,6 +373,23 @@ function view(){
         
         default:
           throw "Unexpected terrain type "+next.type;
+      }
+
+      //check if player reached a present
+      for(var i=0; i<amountOfPresents; i++) {
+          if(currentPosition.x == presents[i].x && currentPosition.y == presents[i].y) presents[i].pickedUpAction();
+      }
+
+      //check if player wants to interact with santa
+      if(currentPosition.x == santaPosition.x && currentPosition.y == santaPosition.y) {
+        if(playerHasPresent) {
+          points = points+10;
+          document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Thank you!';
+          document.getElementById('points').innerHTML = '<br><b>Points:</b> ' + points;
+          playerHasPresent = false;
+        } else {
+          document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Hurry up! Save Christmas by collecting all of the presents!';
+        }
       }
   }
 
@@ -422,19 +422,6 @@ function view(){
 	   groups = { path:svgContainer.append("g"),
 	                  position:svgContainer.append("g") };
 
-	   //goalPosition = this.pickRandomPosition(board);
-	   points = 0;
-	   // goal = svgContainer
-	   //    .append("g")
-	   //    .append("circle")
-	   //    .attr("cx", scales.x(goalPosition.x + 0.5))
-	   //    .attr("cy", scales.y(goalPosition.y + 0.5))
-	   //    .attr("r", circleRadius)
-	   //    .attr("class", "goal");
-
-
-
-
 }
 
   this.createSanta = function(){
@@ -449,56 +436,57 @@ function view(){
   }
 
 
-this.createRandomEnemy = function(){
-	   enemyRandomPosition = this.pickRandomPosition(board);
-	   enemyRandomDirection = this.pickRandomPosition(board);
-	   enemyRandom = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
-	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "enemyRandom");
-}
+  this.createRandomEnemy = function(){
+  	   enemyRandomPosition = this.pickRandomPosition(board);
+  	   enemyRandomDirection = this.pickRandomPosition(board);
+  	   enemyRandom = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
+  	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "enemyRandom");
+  }
 
-this.createShortestPathEnemy = function(){
-	   enemyPosition = this.pickRandomPosition(board);
-	   enemy = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(enemyPosition.x + 0.5))
-	      .attr("cy", scales.y(enemyPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "enemy");  
-	  
-	  
-}
+  this.createShortestPathEnemy = function(){
+  	   enemyPosition = this.pickRandomPosition(board);
+  	   enemy = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(enemyPosition.x + 0.5))
+  	      .attr("cy", scales.y(enemyPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "enemy");  
+  	  
+  	  
+  }
 
-this.createGoalEnemy = function(){
-     enemyGoalPosition = this.pickRandomPosition(board);
-     enemyGoal = svgContainer
-        .append("g")
-        .append("circle")
-        .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
-        .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
-        .attr("r", circleRadius)
-        .attr("class", "enemyGoal");  
-    
-    
-}
+  this.createGoalEnemy = function(){
+       enemyGoalPosition = this.pickRandomPosition(board);
+       enemyGoal = svgContainer
+          .append("g")
+          .append("circle")
+          .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
+          .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
+          .attr("r", circleRadius)
+          .attr("class", "enemyGoal");  
+      
+      
+  }
 
-this.createPlayer = function(){
-	currentPosition = this.pickRandomPosition(board);
-  playerDirection = {x:0, y:0}
-	player = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(currentPosition.x + 0.5))
-	      .attr("cy", scales.y(currentPosition.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "position");
-		  
-	  
-}
+  this.createPlayer = function(){
+    playerHasPresent = false;
+  	currentPosition = this.pickRandomPosition(board);
+    playerDirection = {x:0, y:0}
+  	player = svgContainer
+  	      .append("g")
+  	      .append("circle")
+  	      .attr("cx", scales.x(currentPosition.x + 0.5))
+  	      .attr("cy", scales.y(currentPosition.y + 0.5))
+  	      .attr("r", circleRadius)
+  	      .attr("class", "position");
+  		  
+  	  
+  }
 
 }
