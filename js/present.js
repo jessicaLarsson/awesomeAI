@@ -30,11 +30,12 @@ function present () {
 	// }
 
 	this.pickedUpAction = function () {
-		this.pickedUp = true;
-		playerHasPresent = true;
-		console.log("whahaha ");
-		this.svgElement.remove();
-		//gör nåt med gubben, typ ändra färg 
+		if(!playerHasPresent) {
+			this.pickedUp = true;
+			playerHasPresent = true;
+			this.svgElement.remove();
+			//gör nåt med gubben, typ ändra färg 
+		} else document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> You can only pick up one present at a time - bring me the present you are currently carrying!';
 	}
 
 	this.giveToSanta = function () {
