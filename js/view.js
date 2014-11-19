@@ -10,7 +10,7 @@ function view(){
     return x==0 || y == 0 || x == (gridSize.x-1) || y == (gridSize.y-1);
   }
 
-  function buildboard(gridSize, ratios) {
+  function buildboard(gridSize) {
     var board = { grid:[], path:[], wall:[], ice:[] };
     for (x = 0; x < gridSize.x; x++) {
         board.grid[x] = [];
@@ -19,12 +19,34 @@ function view(){
             if(isBorder(x, y, gridSize)) {
               type = "wall";
             } else {
-              if(Math.random() < ratios.wall) {
-                type = "wall";
-              }
-              if(Math.random() < ratios.ice) {
-                type = "ice";
-              }
+			
+              if(level == 1) {
+				if(x==9 && y>10 && y<25)
+				{
+					type = "wall";
+				}
+				if((x==30 && y>10 && y<25))
+				{
+					type = "wall";
+				}
+				if(y==6 && x>9 && x<30)
+				{
+					type = "wall";
+				}
+				if((y==28 && x>9 && x<30))
+				{
+					type = "wall";
+				}
+              
+				if(x>17 && x<22 && y>15 && y<19) {
+					type = "ice";
+				}
+			  
+			  // if(Math.random()< ratios.ice) {
+                // type = "ice";
+              // }
+			    }
+				
             }
             var cell = { x:x, y:y , type:type };
             board.grid[x][y] = cell;
@@ -384,10 +406,10 @@ function view(){
     //console.log("level = " + level);
 	  squareLength = 18;
 	  circleRadius = 9;
-	  ratios = { wall:0.1, ice:0.01 }; 
+	  //ratios = { wall:0.1, ice:0.01 }; 
 	   gridSize = { x:40, y:35 };
 	   svgSize = getSvgSize(gridSize, squareLength);
-	   board = buildboard(gridSize, ratios);
+	   board = buildboard(gridSize);
 	   svgContainer = d3.select(".display")
 	                          .append("svg")
 	                            .attr("width", svgSize.width)

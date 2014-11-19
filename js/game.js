@@ -12,8 +12,9 @@ game.createSanta();
 game.createPlayer();
 
 //CREATE PRESENTS
-var amountOfPresents = 5;
+var amountOfPresents = (level*2+1);
 var presents = [];
+
 
 for(var i = 0; i < amountOfPresents; i++) {
 	presents.push(new present());
