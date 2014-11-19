@@ -369,6 +369,23 @@ function view(){
         default:
           throw "Unexpected terrain type "+next.type;
       }
+
+      //check if player reached a present
+      for(var i=0; i<amountOfPresents; i++) {
+          if(currentPosition.x == presents[i].x && currentPosition.y == presents[i].y) presents[i].pickedUpAction();
+      }
+
+      //check if player wants to interact with santa
+      if(currentPosition.x == santaPosition.x && currentPosition.y == santaPosition.y) {
+        if(playerHasPresent) {
+          points = points+10;
+          document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Thank you!';
+          document.getElementById('points').innerHTML = '<br><b>Points:</b> ' + points;
+          playerHasPresent = false;
+        } else {
+          document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Hurry up! Save Christmas by collecting all of the presents!';
+        }
+      }
   }
 
   function checkSantaStatus(){
