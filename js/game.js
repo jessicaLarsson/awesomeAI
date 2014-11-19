@@ -24,7 +24,6 @@ for(var i = 0; i < amountOfPresents; i++) {
 window.addEventListener("keydown", game.keyDownHandler, true);
 enemyMoveInterval = setInterval(function () {
 	game.moveEnemies();
-	checkPlayersPosition();
 
 	}, 400); 
 
