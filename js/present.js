@@ -31,9 +31,17 @@ function present () {
 
 	this.pickedUpAction = function () {
 		if(!playerHasPresent) {
-			this.pickedUp = true;
+			// this.pickedUp = true;
+			pickedUpPresents ++;
 			playerHasPresent = true;
 			this.svgElement.remove();
+			// player = svgContainer
+  	//       .append("g")
+  	//       .append("circle")
+  	//       .attr("cx", scales.x(currentPosition.x + 0.5))
+  	//       .attr("cy", scales.y(currentPosition.y + 0.5))
+  	//       .attr("r", circleRadius)
+  	//       .attr("class", "gotPresent");
 			//gör nåt med gubben, typ ändra färg 
 		} else document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> You can only pick up one present at a time - bring me the present you are currently carrying!';
 	}

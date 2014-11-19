@@ -257,16 +257,7 @@ function view(){
   //   }
   // }
 
-  function setLevel(level) {
-    if(level == 2) {
-      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
-      game.createShortestPathEnemy();
-    }
-    if(level == 3) {
-      document.getElementById('level').innerHTML = '<br>level: ' + level + '';
-      game.createGoalEnemy();
-    }
-  }
+
 
   function checkEnemyCollision(){
 
@@ -339,8 +330,6 @@ function view(){
               break;
           }
           executeCommands(next);
-		      inGoal();
-
         }
 
   function executeCommands(next) {
@@ -410,9 +399,6 @@ function view(){
 
 	   groups = { path:svgContainer.append("g"),
 	                  position:svgContainer.append("g") };
-
-	   points = 0;
-
 
 }
 
