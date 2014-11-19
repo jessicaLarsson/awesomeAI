@@ -1,47 +1,41 @@
-game = new view();
+gameBoard = new gameBoard();
+
+view = new view();
+
 var level = 1;
 var pickedUpPresents = 0;
 var points = 0;
 var amountOfPresents = 2;
 
-game.createBoard();
 
 //CREATE ENEMY
-game.createRandomEnemy();
+enemy1 = new enemy("enemyNextDistance");
+enemy1.draw();
+
+
 document.getElementById('level').innerHTML = '<br>level: ' + level + '';
 
-
-game.createSanta();
-game.createPlayer();
-createPresents(amountOfPresents);
-
+view.createSanta();
+view.createPlayer();
 
 
 //CREATE PRESENTS
 var amountOfPresents = (level*2+1);
-var presents = [];
+createPresents(amountOfPresents);
 
-
-for(var i = 0; i < amountOfPresents; i++) {
-	presents.push(new present());
-	presents[i].drawPresent();
 function createPresents(amountOfPresents) {
 	presents = [];
-
 	for(var i = 0; i < amountOfPresents; i++) {
 		presents.push(new present());
-		presents[i].drawPresent();
+		presents[i].draw();
 	}
-
 }
 
-}
 function checkIfDone() {
 	if(pickedUpPresents == amountOfPresents && !playerHasPresent) {
 		level++;
 		setNewLevel();
 		pickedUpPresents = 0;
-
 	}
 }
 
@@ -49,14 +43,31 @@ function setNewLevel() {
 	document.getElementById('level').innerHTML = '<br>level: ' + level + '';
     amountOfPresents++;
     createPresents(amountOfPresents);
-    if(level == 2) game.createShortestPathEnemy();   
-    if(level == 3) game.createGoalEnemy();
+    if(level == 2){
+    	enemy2 = new enemy("enemyRandomNext");
+    	enemy2.draw();
+    }
+    if(level == 3){
+    	enemy3 = new enemy("enemyNextGoal");
+    	enemy3.draw();
+    }
+}
+
+
+function moveEnemies() {
+	enemy1.move();
+	if(level > 1){
+    	enemy2.move();
+    }
+    if(level > 2){
+    	enemy3.move();
+    }
 }
 
 //EVENT HANDLERS
-window.addEventListener("keydown", game.keyDownHandler, true);
+window.addEventListener("keydown", view.keyDownHandler, true);
 enemyMoveInterval = setInterval(function () {
-	game.moveEnemies();
+	moveEnemies();
 	checkIfDone();
 	}, 400); 
 

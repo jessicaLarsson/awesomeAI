@@ -1,98 +1,5 @@
 function view(){
 
-	function getSvgSize(gridSize, squareLength) {
-    var width = gridSize.x * squareLength;
-    var height = gridSize.y * squareLength;
-    return { width:width, height:height };
-  }
-
-  function isBorder(x, y, gridSize) {
-    return x==0 || y == 0 || x == (gridSize.x-1) || y == (gridSize.y-1);
-  }
-
-  function buildboard(gridSize) {
-    var board = { grid:[], path:[], wall:[], ice:[] };
-    for (x = 0; x < gridSize.x; x++) {
-        board.grid[x] = [];
-        for (y = 0; y < gridSize.y; y++) {
-            var type = "path";
-            if(isBorder(x, y, gridSize)) {
-              type = "wall";
-            } else {
-			
-              if(level == 1) {
-				if(x==9 && y>10 && y<25)
-				{
-					type = "wall";
-				}
-				if((x==30 && y>10 && y<25))
-				{
-					type = "wall";
-				}
-				if(y==6 && x>9 && x<30)
-				{
-					type = "wall";
-				}
-				if((y==28 && x>9 && x<30))
-				{
-					type = "wall";
-				}
-              
-				if(x>17 && x<22 && y>15 && y<19) {
-					type = "ice";
-				}
-			  
-			  // if(Math.random()< ratios.ice) {
-                // type = "ice";
-              // }
-			    }
-				
-            }
-            var cell = { x:x, y:y , type:type };
-            board.grid[x][y] = cell;
-            board[type].push(cell);
-        }
-    }
-    return board;
-  }
-
-  function getScale(gridSize, svgSize) {
-    var xScale = d3.scale.linear().domain([0,gridSize.x]).range([0,svgSize.width]);
-    var yScale = d3.scale.linear().domain([0,gridSize.y]).range([0,svgSize.height]);
-    return { x:xScale, y:yScale };
-  }
-
-  function drawCells(svgContainer, scales, data, cssClass) {
-    var gridGroup = svgContainer.append("g");
-    var cells = gridGroup.selectAll("rect")
-                .data(data)
-                .enter()
-                .append("rect");
-    var cellAttributes = cells
-             .attr("x", function (d) { return scales.x(d.x); })
-             .attr("y", function (d) { return scales.y(d.y); })
-             .attr("width", function (d) { return squareLength; })
-             .attr("height", function (d) { return squareLength; })
-             .attr("class", cssClass);
-
-  }
-
-  function drawWall(svgContainer, scales, data, cssClass){
-    var gridGroup = svgContainer.append("g");
-
-    var cells = gridGroup.selectAll("circle")
-                .data(data)
-                .enter()
-                .append("circle");
-    var cellAttributes = cells
-    
-             .attr("cx", function (d) { return scales.x(d.x+0.5); })
-             .attr("cy", function (d) { return scales.y(d.y+0.5); })
-             .attr("r", circleRadius)
-             
-             .attr("class", cssClass);
-  }
-
   function drawCurrentPosition(currentPosition) {
     player    
       .attr("cx", scales.x(currentPosition.x + 0.5))
@@ -101,198 +8,18 @@ function view(){
       .attr("class", "position");
 
   }
-  
-  function drawEnemyDirection (enemyPosition){
-	enemy.remove();
-  enemy = svgContainer
-    .append("g")
-    .append("circle")
-	  .attr("cx", scales.x(enemyPosition.x + 0.5))
-    .attr("cy", scales.y(enemyPosition.y + 0.5))
-    .attr("r", circleRadius)
-    .attr("class", "enemy");
-  }
-
-  function drawEnemyGoalDirection (blubb){
-    enemyGoal.remove();
-    enemyGoal = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(blubb.x + 0.5))
-      .attr("cy", scales.y(blubb.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "enemyGoal");
-  }
-   
-  function drawEnemyRandomDirection (blubb){
-    enemyRandom.remove();
-    enemyRandom = svgContainer
-      .append("g")
-      .append("circle")
-      .attr("cx", scales.x(blubb.x + 0.5))
-      .attr("cy", scales.y(blubb.y + 0.5))
-      .attr("r", circleRadius)
-      .attr("class", "enemyRandom");
-  }
-
-  function enemyNextDistance(){
-		//dist = Math.sqrt(Math.pow((enemyPosition.x-currentPosition.x),2) + Math.pow((enemyPosition.y - currentPosition.y),2)); 
-		var distX = (enemyPosition.x-currentPosition.x);
-		var distY = (enemyPosition.y-currentPosition.y);
-		var enemyNext;
-
-    //console.log("DistX: " + Math.abs(distX) + ", DistY: " + Math.abs(distY));
-		
-			if(Math.abs(distX) > Math.abs(distY)){		
-        var direction = distX/Math.abs(distX);	
-				enemyNext = board.grid[enemyPosition.x-direction][enemyPosition.y];
-			}
-			else{
-        var direction = distY/Math.abs(distY); 
-				enemyNext = board.grid[enemyPosition.x][enemyPosition.y-direction];	
-			}
-		
-		switch(enemyNext.type) {
-      case "path":
-      case "ice":
-        enemyPosition = enemyNext;
-        drawEnemyDirection(enemyPosition);
-        break;
-      
-      case "wall":
-        //enemyNext = board.grid[enemyPosition.x-1][enemyPosition.y+1]; // DO something different
-        enemyPosition = enemyNext;
-        drawEnemyDirection(enemyNext);
-		    break;
-
-		}
- 
-  }
-
-  this.enemyRandomNext = function(){
-    //console.log("enemyRandom = " + enemyRandom);
-    //console.log(enemyRandomPosition.x + ", " + enemyRandomPosition.y);
-    if(enemyRandomPosition.x == enemyRandomDirection.x && enemyRandomPosition.y == enemyRandomDirection.y) {
-
-        enemyRandomDirection = this.pickRandomPosition(board);
-        
-    }
-    var distX = (enemyRandomPosition.x-enemyRandomDirection.x);
-    var distY = (enemyRandomPosition.y-enemyRandomDirection.y);
-    var enemyNext;
-
-      if(Math.abs(distX) > Math.abs(distY)){    
-        var direction = distX/Math.abs(distX);  
-        enemyNext = board.grid[enemyRandomPosition.x-direction][enemyRandomPosition.y];
-      }
-      else{
-        var direction = distY/Math.abs(distY); 
-        enemyNext = board.grid[enemyRandomPosition.x][enemyRandomPosition.y-direction]; 
-      }
-    
-    switch(enemyNext.type) {
-      case "path":
-      case "ice":
-        enemyRandomPosition = enemyNext;
-        drawEnemyRandomDirection(enemyRandomPosition);
-        break;
-      
-      case "wall":
-        enemyRandomDirection = this.pickRandomPosition(board);
-        drawEnemyRandomDirection(enemyRandomPosition);
-        break;
-    }
-  }
-
-  function enemyNextGoal(){
-    var distX = (enemyGoalPosition.x-(currentPosition.x + playerDirection.x*10));
-    var distY = (enemyGoalPosition.y-(currentPosition.y + playerDirection.y*10));
-    if(distX && distY < 10){
-      distX = (enemyGoalPosition.x-currentPosition.x);
-      distY = (enemyGoalPosition.y-currentPosition.y);
-    }
-
-    var enemyGoalNext;
-
-    
-      if(Math.abs(distX) > Math.abs(distY)){    
-        var direction = distX/Math.abs(distX);  
-        enemyGoalNext = board.grid[enemyGoalPosition.x-direction][enemyGoalPosition.y];
-      }
-      else{
-        var direction = distY/Math.abs(distY); 
-        enemyGoalNext = board.grid[enemyGoalPosition.x][enemyGoalPosition.y-direction]; 
-      }
-    
-    switch(enemyGoalNext.type) {
-      case "path":
-      case "ice":
-        enemyGoalPosition = enemyGoalNext;
-        drawEnemyGoalDirection(enemyGoalPosition);
-        break;
-      
-      case "wall":
-        enemyGoalPosition = enemyGoalNext;
-        drawEnemyGoalDirection(enemyGoalNext);
-        break;
-
-    }
-  }
-
-  this.moveEnemies = function() {
-    
-    this.enemyRandomNext();
-
-    if(level > 1) {
-      enemyNextDistance();
-    }
-    if(level > 2) {
-      enemyNextGoal();
-    }
-    
-    checkEnemyCollision();
-    
-  }
-   
-  // function inGoal (){
-  //   var goalDist = Math.abs(goalPosition.x-currentPosition.x) + Math.abs(goalPosition.y-currentPosition.y);
-  //   if (goalDist == 0){
-  //       points = points+100;
-  //       document.getElementById('points').innerHTML = '<br>Points: ' + points + '';
-		
-		// //New goal
-		// goal.remove();
-  //   goal = this.pickRandomPosition(board);
-  //   goalPosition = goal;
-
-  //   goal = svgContainer
-  //     .append("g")
-  //     .append("circle")
-  //     .attr("cx", scales.x(goal.x + 0.5))
-  //     .attr("cy", scales.y(goal.y + 0.5))
-  //     .attr("r", circleRadius)
-  //     .attr("class", "goal");
-
-
-  //     level++;
-  //     setLevel(level);
-  //   }
-  // }
-
-
 
   function checkEnemyCollision(){
-
-    var enemyRandomDist = Math.abs(enemyRandomPosition.x-currentPosition.x) + Math.abs(enemyRandomPosition.y-currentPosition.y);
+    var enemyRandomDist = Math.abs(enemy1.pos.x-currentPosition.x) + Math.abs(enemy1.pos.y-currentPosition.y);
     
     if(level > 1) {
-      var enemyDist = Math.abs(enemyPosition.x-currentPosition.x) + Math.abs(enemyPosition.y-currentPosition.y);
+      var enemyDist = Math.abs(enemy1.pos.x-currentPosition.x) + Math.abs(enemy1.pos.y-currentPosition.y);
 
     } else {
       var enemyNextDistance = 1;
     }
     if(level > 2) {
-      var enemyGoalDist = Math.abs(enemyGoalPosition.x-currentPosition.x) + Math.abs(enemyGoalPosition.y-currentPosition.y);
+      var enemyGoalDist = Math.abs(enemy2.pos.x-currentPosition.x) + Math.abs(enemy2.pos.y-currentPosition.y);
     } else var enemyGoalDist = 1;
     
     if(enemyDist == 0 || enemyRandomDist == 0 || enemyGoalDist == 0){
@@ -304,17 +31,10 @@ function view(){
         alert("GAME OVER - Christmas is ruined!!");
         clearInterval(enemyMoveInterval);
 
-      }
-      
-      
+      }   
     }
   }
 
-  this.pickRandomPosition = function(board) {
-    var path = board.path;
-    var i = Math.ceil(Math.random() * path.length);
-    return path[i];
-  }
 
   this.keyDownHandler = function(event){
     var key = event.which;
@@ -402,30 +122,8 @@ function view(){
     }
   }
 
-  this.createBoard = function(){
-    //console.log("level = " + level);
-	  squareLength = 18;
-	  circleRadius = 9;
-	  //ratios = { wall:0.1, ice:0.01 }; 
-	   gridSize = { x:40, y:35 };
-	   svgSize = getSvgSize(gridSize, squareLength);
-	   board = buildboard(gridSize);
-	   svgContainer = d3.select(".display")
-	                          .append("svg")
-	                            .attr("width", svgSize.width)
-	                            .attr("height", svgSize.height);
-	   scales = getScale(gridSize, svgSize);
-	  drawCells(svgContainer, scales, board.path, "path");
-	  drawWall(svgContainer, scales, board.wall, "wall");
-	  drawCells(svgContainer, scales, board.ice, "ice");
-
-	   groups = { path:svgContainer.append("g"),
-	                  position:svgContainer.append("g") };
-
-}
-
   this.createSanta = function(){
-    santaPosition = this.pickRandomPosition(board);
+    santaPosition = gameBoard.pickRandomPosition();
     santa = svgContainer
           .append("g")
           .append("circle")
@@ -435,48 +133,9 @@ function view(){
           .attr("class", "santa");
   }
 
-
-  this.createRandomEnemy = function(){
-  	   enemyRandomPosition = this.pickRandomPosition(board);
-  	   enemyRandomDirection = this.pickRandomPosition(board);
-  	   enemyRandom = svgContainer
-  	      .append("g")
-  	      .append("circle")
-  	      .attr("cx", scales.x(enemyRandomPosition.x + 0.5))
-  	      .attr("cy", scales.y(enemyRandomPosition.y + 0.5))
-  	      .attr("r", circleRadius)
-  	      .attr("class", "enemyRandom");
-  }
-
-  this.createShortestPathEnemy = function(){
-  	   enemyPosition = this.pickRandomPosition(board);
-  	   enemy = svgContainer
-  	      .append("g")
-  	      .append("circle")
-  	      .attr("cx", scales.x(enemyPosition.x + 0.5))
-  	      .attr("cy", scales.y(enemyPosition.y + 0.5))
-  	      .attr("r", circleRadius)
-  	      .attr("class", "enemy");  
-  	  
-  	  
-  }
-
-  this.createGoalEnemy = function(){
-       enemyGoalPosition = this.pickRandomPosition(board);
-       enemyGoal = svgContainer
-          .append("g")
-          .append("circle")
-          .attr("cx", scales.x(enemyGoalPosition.x + 0.5))
-          .attr("cy", scales.y(enemyGoalPosition.y + 0.5))
-          .attr("r", circleRadius)
-          .attr("class", "enemyGoal");  
-      
-      
-  }
-
   this.createPlayer = function(){
     playerHasPresent = false;
-  	currentPosition = this.pickRandomPosition(board);
+  	currentPosition = gameBoard.pickRandomPosition();
     playerDirection = {x:0, y:0}
   	player = svgContainer
   	      .append("g")

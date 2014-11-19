@@ -60,24 +60,25 @@ svg {
 	stroke: #2973F2;
 }
 
-.enemy {
+.enemy, .enemyNextDistance {
 	fill: pink;
 	stroke-width: 3px;
 	stroke: black;
 }
 
-.enemyRandom {
+.enemyRandom, .enemyRandomNext {
 
 	fill: orange;
 	stroke-width: 3px;
 	stroke: black;
 }
 
-.enemyGoal {
+.enemyGoal, .enemyNextGoal {
 	fill: green;
 	stroke-width: 3px;
 	stroke: black;
 }
+
 
 
 

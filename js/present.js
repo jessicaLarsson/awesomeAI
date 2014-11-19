@@ -1,5 +1,5 @@
 function present () {
-	var pos = game.pickRandomPosition(board);
+	var pos = gameBoard.pickRandomPosition();
 	this.x = pos.x;
 	this.y = pos.y;
 	this.pickedUp = false;
@@ -7,7 +7,7 @@ function present () {
 	this.done = 0;
 
 
-	this.drawPresent = function (){
+	this.draw = function (){
 		this.svgElement = svgContainer
 	      .append("g")
 	      .append("circle")
