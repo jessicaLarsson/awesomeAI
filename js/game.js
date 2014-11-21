@@ -3,6 +3,7 @@ gameBoard = new gameBoard();
 view = new view();
 
 var level = 1;
+var maxLevel = 3;
 var pickedUpPresents = 0;
 var points = 0;
 var amountOfPresents = 2;
@@ -36,6 +37,11 @@ function checkIfDone() {
 		level++;
 		setNewLevel();
 		pickedUpPresents = 0;
+	}
+
+	if(level > maxLevel) {
+		alert("YOU SAVED CHRISTMAS! - You got " + points + "points in total!");
+        clearInterval(enemyMoveInterval);
 	}
 }
 
