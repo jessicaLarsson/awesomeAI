@@ -4,6 +4,7 @@ view = new view();
 
 var level = 1;
 var maxLevel = 3;
+var lives = 3;
 var pickedUpPresents = 0;
 var points = 0;
 var amountOfPresents = 2;
@@ -15,6 +16,7 @@ enemy1.draw();
 
 
 document.getElementById('level').innerHTML = '<br>level: ' + level + '';
+document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';
 
 view.createSanta();
 view.createPlayer();
@@ -41,6 +43,11 @@ function checkIfDone() {
 
 	if(level > maxLevel) {
 		alert("YOU SAVED CHRISTMAS! - You got " + points + "points in total!");
+        clearInterval(enemyMoveInterval);
+	}
+
+	if(lives < 1) {
+		alert("GAME OVER - Christmas is ruined!!");
         clearInterval(enemyMoveInterval);
 	}
 }

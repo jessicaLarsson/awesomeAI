@@ -34,11 +34,15 @@ function view(){
     if(enemyDist == 0 || enemyRandomDist == 0 || enemyGoalDist == 0){
       if(playerHasPresent) {
         playerHasPresent = false;
+        lives = lives-1;
+        document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';
         document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b>Oh no! You lost the present! Quick get all the others!';
         
       } else {
-        alert("GAME OVER - Christmas is ruined!!");
-        clearInterval(enemyMoveInterval);
+                lives = lives-1;
+
+                document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';
+        
 
       }   
     }
