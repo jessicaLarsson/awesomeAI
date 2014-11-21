@@ -1,11 +1,20 @@
 function view(){
 
   function drawCurrentPosition(currentPosition) {
-    player    
+    if(playerHasPresent){
+      player    
+        .attr("cx", scales.x(currentPosition.x + 0.5))
+        .attr("cy", scales.y(currentPosition.y + 0.5))
+        .attr("r", circleRadius)
+        .attr("class", "gotPresent");
+    } else {
+          player    
       .attr("cx", scales.x(currentPosition.x + 0.5))
       .attr("cy", scales.y(currentPosition.y + 0.5))
       .attr("r", circleRadius)
       .attr("class", "position");
+    }
+
 
   }
 
