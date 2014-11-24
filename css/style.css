@@ -9,7 +9,6 @@ body {
 }
 
 svg {
-	border: 1px solid black;
 	background: #d3e6f4;
 }
 
@@ -18,7 +17,8 @@ svg {
 }
 
 .wall {
-	fill: #858585;
+	fill: #FFFFFF;
+	background-image: radial-gradient(56% 32%, transparent, black 90%);"
 }
 
 .ice {

@@ -106,11 +106,34 @@ function gameBoard(){
                 .data(data)
                 .enter()
                 .append("circle");
+
+
+      // Define the gradient
+    var gradient = svgContainer.append("svg:defs")
+        .append("svg:linearGradient")
+        .attr("id", "gradient")
+        .attr("x1", "0%")
+        .attr("y1", "0%")
+        .attr("x2", "100%")
+        .attr("y2", "100%")
+        .attr("spreadMethod", "pad");
+
+    // Define the gradient colors
+    gradient.append("svg:stop")
+        .attr("offset", "0%")
+        .attr("stop-color", "#FFFFFF")
+        .attr("stop-opacity", 1);
+
+    gradient.append("svg:stop")
+        .attr("offset", "100%")
+        .attr("stop-color", "#E5F0F8")
+        .attr("stop-opacity", 1);
+
+
     var cellAttributes = cells
              .attr("cx", function (d) { return scales.x(d.x+0.5); })
              .attr("cy", function (d) { return scales.y(d.y+0.5); })
              .attr("r", circleRadius)
-             
-             .attr("class", cssClass);
+              .attr('fill', 'url(#gradient)');
   }
 }
