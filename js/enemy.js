@@ -1,8 +1,8 @@
  function enemy (type) {
-	this.pos = gameBoard.pickRandomPosition(board);
+	this.pos = gameBoard.pickRandomPosition();
 	this.type = type;
 	this.svgElement = "";
-	this.circleRadius = 9;
+	this.circleRadius = 12;
 
 	randomGoal = gameBoard.pickRandomPosition(); //not that nice to do this here, better solution?
 
@@ -18,15 +18,15 @@
 	      .attr("class", this.type);
 	}
 
-	this.move = function () { //enemyRandomNext
+	this.move = function () {
 		var distX, distY;
 		
-		if(this.type == "enemyNextDistance"){
+		if(this.type == "enemyClosestDistance"){
 			
-			distX = (this.pos.x-currentPosition.x);
-			distY = (this.pos.y-currentPosition.y);
+			distX = (this.pos.x-player.pos.x);
+			distY = (this.pos.y-player.pos.y);
 	
-		}else if(this.type == "enemyRandomNext"){
+		}else if(this.type == "enemyRandomMovement"){
 			
 			if(this.pos.x == randomGoal.x && this.pos.y == randomGoal.y) {
 		        randomGoal = gameBoard.pickRandomPosition();
@@ -34,12 +34,12 @@
 		    distX = (this.pos.x-randomGoal.x);
 		    distY = (this.pos.y-randomGoal.y);
 
-		}else if(this.type == "enemyNextGoal"){
-		 	distX = (this.pos.x-(currentPosition.x + playerDirection.x*10));
-		    distY = (this.pos.y-(currentPosition.y + playerDirection.y*10));
+		}else if(this.type == "enemyPlayerDirection"){
+		 	distX = (this.pos.x-(player.pos.x + player.direction.x*10));
+		    distY = (this.pos.y-(player.pos.y + player.direction.y*10));
 		    if(distX && distY < 10){
-		      distX = (this.pos.x-currentPosition.x);
-		      distY = (this.pos.y-currentPosition.y);
+		      distX = (this.pos.x-plsyer.pos.x);
+		      distY = (this.pos.y-player.pos.y);
 		    }
 		}
 
@@ -48,10 +48,10 @@
 		if(distX != 0 || distY != 0){ //inte dela med 0 nedan
 		    if(Math.abs(distX) > Math.abs(distY)){    
 				var direction = distX/Math.abs(distX);  
-				nextPos = board.grid[this.pos.x-direction][this.pos.y];
+				nextPos = gameBoard.board.grid[this.pos.x-direction][this.pos.y];
 			}else{
 				var direction = distY/Math.abs(distY); 
-				nextPos = board.grid[this.pos.x][this.pos.y-direction]; 
+				nextPos = gameBoard.board.grid[this.pos.x][this.pos.y-direction]; 
 			}
 
 			switch(nextPos.type) {

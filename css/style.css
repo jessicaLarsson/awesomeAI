@@ -3,38 +3,22 @@ body {
     background-color: #EEEEEE;
 }
 
-.display, .control {
-	margin: 10px;
-}
-
 .display {
+	margin: 20px;
 	float: left;
-}
-
-.control {
-	float: left;
-}
-
-.control textarea {
-	margin: 10px;
 }
 
 svg {
 	border: 1px solid black;
+	background: #d3e6f4;
 }
 
 .path {
 	fill: #d3e6f4;
-	/*stroke-width: 1px;*/
-	/*stroke: #2D801C;*/
-	border: none !important;
 }
 
 .wall {
 	fill: #858585;
-	color: #d3e6f4;
-	/*stroke-width: 1px;*/
-	/*stroke: #C7C7C7;*/
 }
 
 .ice {
@@ -48,32 +32,30 @@ svg {
 	stroke: red;
 }
 
-.position {
+.player {
 	fill: #C9EBF0;
-	/*stroke-width: 3px;*/
 	stroke: #2973F2;
 }
 
 .gotPresent {
 	fill: green;
-	/*stroke-width: 3px;*/
 	stroke: #2973F2;
 }
 
-.enemy, .enemyNextDistance {
+.enemyClosestDistance {
 	fill: pink;
 	stroke-width: 3px;
 	stroke: black;
 }
 
-.enemyRandom, .enemyRandomNext {
+.enemyRandomMovement {
 
 	fill: orange;
 	stroke-width: 3px;
 	stroke: black;
 }
 
-.enemyGoal, .enemyNextGoal {
+.enemyPlayerDirection {
 	fill: green;
 	stroke-width: 3px;
 	stroke: black;

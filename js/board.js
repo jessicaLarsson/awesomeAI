@@ -1,30 +1,39 @@
 function gameBoard(){
-  squareLength = 18;
-  circleRadius = 9;
-  this.gridSize = { x:40, y:35 };
+  squareLength = 25;
+  circleRadius = 15;
+  this.gridSize = { x:25, y:25 };
   this.svgSize = getSvgSize(this.gridSize, squareLength);
-  board = buildboard(this.gridSize);
+  this.board = { grid:[], path:[], wall:[], ice:[] };
   
   svgContainer = d3.select(".display")
                         .append("svg")
                           .attr("width", this.svgSize.width)
                           .attr("height", this.svgSize.height);
   
-      var xScale = d3.scale.linear().domain([0,this.gridSize.x]).range([0,this.svgSize.width]);
-    var yScale = d3.scale.linear().domain([0,this.gridSize.y]).range([0,this.svgSize.height]);
-    scales =  { x:xScale, y:yScale };
-  drawCells(svgContainer, scales, board.path, "path");
-  drawWall(svgContainer, scales, board.wall, "wall");
-  drawCells(svgContainer, scales, board.ice, "ice");
+  var xScale = d3.scale.linear().domain([0,this.gridSize.x]).range([0,this.svgSize.width]);
+  var yScale = d3.scale.linear().domain([0,this.gridSize.y]).range([0,this.svgSize.height]);
+  scales =  { x:xScale, y:yScale };
 
   groups = { path:svgContainer.append("g"),
                 position:svgContainer.append("g") };
 
+  this.draw = function(){
+    drawCells(svgContainer, scales, this.board.path, "path");
+    drawWall(svgContainer, scales, this.board.wall, "wall");
+    drawCells(svgContainer, scales, this.board.ice, "ice");
+  }
+
 
   this.pickRandomPosition = function() {
-    var path = board.path;
+    var path = this.board.path;
     var i = Math.ceil(Math.random() * path.length);
     return path[i];
+  }
+
+  this.getScale = function() {
+    var xScale = d3.scale.linear().domain([0,this.gridSize.x]).range([0,this.svgSize.width]);
+    var yScale = d3.scale.linear().domain([0,this.gridSize.y]).range([0,this.svgSize.height]);
+    return { x:xScale, y:yScale };
   }
 
   function getSvgSize(gridSize, squareLength) {
@@ -37,49 +46,43 @@ function gameBoard(){
     return x==0 || y == 0 || x == (gridSize.x-1) || y == (gridSize.y-1);
   }
 
-  function buildboard(gridSize) {
-    var board = { grid:[], path:[], wall:[], ice:[] };
-    for (x = 0; x < gridSize.x; x++) {
-        board.grid[x] = [];
-        for (y = 0; y < gridSize.y; y++) {
+  this.buildBoard = function() {
+    for (x = 0; x < this.gridSize.x; x++) {
+        this.board.grid[x] = [];
+        for (y = 0; y < this.gridSize.y; y++) {
           var type = "path";
-          if(isBorder(x, y, gridSize)) {
+          if(Math.random() < 0.005) type = "ice";
+          if(isBorder(x, y, this.gridSize)) {
             type = "wall";
           } else {
 
-            if(x==9 && y>10 && y<25)
+            if(x==5 && y>7 && y<17)
             {
               type = "wall";
             }
-            if((x==30 && y>10 && y<25))
+            if((x==19 && y>7 && y<17))
             {
               type = "wall";
             }
-            if(y==6 && x>9 && x<30)
+            if(y==5 && x>7 && x<17)
             {
               type = "wall";
             }
-            if((y==28 && x>9 && x<30))
+            if((y==19 && x>7 && x<17))
             {
               type = "wall";
-            }
-                  
-            if(x>17 && x<22 && y>15 && y<19) {
-              type = "ice";
-          }
+            }   
+            if(y < 14 && y > 10 && x < 14 && x > 10)             
+            {
+              type = "wall";
+            }  
         }
+
         var cell = { x:x, y:y , type:type };
-        board.grid[x][y] = cell;
-        board[type].push(cell);
+        this.board.grid[x][y] = cell;
+        this.board[type].push(cell);
       }
     }
-    return board;
-  }
-
-   this.getScale = function() {
-    var xScale = d3.scale.linear().domain([0,this.gridSize.x]).range([0,this.svgSize.width]);
-    var yScale = d3.scale.linear().domain([0,this.gridSize.y]).range([0,this.svgSize.height]);
-    return { x:xScale, y:yScale };
   }
 
   function drawCells(svgContainer, scales, data, cssClass) {
