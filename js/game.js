@@ -6,6 +6,11 @@ var points = 0;
 var amountOfPresents = 2;
 
 
+
+document.getElementById('level-body').innerHTML = '<b>level:</b> ' + level + '';
+$('#newLevelModal').modal('show');
+
+
 //CREATE GAMEBOARD
 gameBoard = new gameBoard();
 gameBoard.buildBoard();
@@ -60,7 +65,7 @@ function createPresents(amountOfPresents) {
 	}
 }
 
-function setNewLevel() {
+function setNewLevel() { 
 	document.getElementById('level').innerHTML = '<br><b>level:</b> ' + level + '';
     amountOfPresents++;
     createPresents(amountOfPresents);
