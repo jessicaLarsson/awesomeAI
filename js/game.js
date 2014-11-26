@@ -179,7 +179,10 @@ function checkEnemyCollision(){
 function checkPresents(){
 	//check if player reached a present
     for(var i=0; i<amountOfPresents; i++) {
-        if(player.pos.x == presents[i].x && player.pos.y == presents[i].y && presents[i].pickedUp == false) presents[i].pickedUpAction();
+        if(player.pos.x == presents[i].x && player.pos.y == presents[i].y && presents[i].pickedUp == false) {
+        	presents[i].pickedUpAction();
+        	player.draw();
+        }
     }
 }
 

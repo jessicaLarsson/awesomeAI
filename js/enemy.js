@@ -38,21 +38,36 @@
 		 	distX = (this.pos.x-(player.pos.x + player.direction.x*10));
 		    distY = (this.pos.y-(player.pos.y + player.direction.y*10));
 		    if(distX && distY < 10){
-		      distX = (this.pos.x-plsyer.pos.x);
+		      distX = (this.pos.x-player.pos.x);
 		      distY = (this.pos.y-player.pos.y);
 		    }
 		}
 
 		var nextPos;
 
-		if(distX != 0 || distY != 0){ //inte dela med 0 nedan
+		//this needs refactoring
+		if(distX != 0 || distY != 0){
+			var directionX = 0;
+			var directionY = 0;
 		    if(Math.abs(distX) > Math.abs(distY)){    
-				var direction = distX/Math.abs(distX);  
-				nextPos = gameBoard.board.grid[this.pos.x-direction][this.pos.y];
+				directionX = distX/Math.abs(distX);  
 			}else{
-				var direction = distY/Math.abs(distY); 
-				nextPos = gameBoard.board.grid[this.pos.x][this.pos.y-direction]; 
+				directionY = distY/Math.abs(distY);
 			}
+			
+			nextPos = gameBoard.board.grid[this.pos.x-directionX][this.pos.y-directionY]; 
+
+			if(nextPos.type == "wall"){
+				if (directionX == 0){
+					directionX = 1;//distX/Math.abs(distX);  
+					directionY = 0;
+				}else{
+					directionY = 1;//distY/Math.abs(distY);
+					directionX = 0;
+				}
+			}
+
+			nextPos = gameBoard.board.grid[this.pos.x-directionX][this.pos.y-directionY]; 
 
 			switch(nextPos.type) {
 				case "path":
