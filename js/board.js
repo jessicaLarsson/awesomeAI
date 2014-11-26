@@ -20,7 +20,7 @@ function gameBoard(){
   this.draw = function(){
     drawCells(svgContainer, scales, this.board.path, "path");
     drawWall(svgContainer, scales, this.board.wall, "wall");
-    drawCells(svgContainer, scales, this.board.ice, "ice");
+    drawIce(svgContainer, scales, this.board.ice, "ice");
   }
 
 
@@ -100,13 +100,29 @@ function gameBoard(){
 
   }
 
+  function drawIce(svgContainer, scales, data, cssClass) {
+    var gridGroup = svgContainer.append("g");
+    var cells = gridGroup.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect");
+    var cellAttributes = cells
+             .attr("x", function (d) { return scales.x(d.x); })
+             .attr("y", function (d) { return scales.y(d.y); })
+             .attr("width", function (d) { return squareLength; })
+             .attr("height", function (d) { return squareLength; })
+             .attr("rx", 7)
+             .attr("ry", 7)
+             .attr("class", cssClass);
+
+  }
+
   function drawWall(svgContainer, scales, data, cssClass){
     var gridGroup = svgContainer.append("g");
     var cells = gridGroup.selectAll("circle")
                 .data(data)
                 .enter()
                 .append("circle");
-
 
       // Define the gradient
     var gradient = svgContainer.append("svg:defs")

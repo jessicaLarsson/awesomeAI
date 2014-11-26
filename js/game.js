@@ -36,6 +36,8 @@ document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';
 
 //EVENT HANDLERS
 window.addEventListener("keydown", keyDownHandler, true);
+
+//INTERVAL FUNCTIONS
 enemyMoveInterval = setInterval(function () {
 	moveEnemies();
 	checkIfDone();
@@ -122,7 +124,9 @@ function executeCommands(next) {
           break;
         
         case "ice":
-          //någonting ska väl hända??
+          player.hasPresent = false;
+          player.pos = next;
+          player.draw();
           return;
         
         default:
@@ -132,6 +136,7 @@ function executeCommands(next) {
 	checkEnemyCollision();
 	checkPresents();
 	checkSantaInteraction();
+	//player.draw();
 }
 
 function checkIfDone() {
@@ -156,6 +161,7 @@ function checkEnemyCollision(){
 	var taken = false;
 	for(var i = 0; i < enemies.length; i++){
 		if(Math.abs(enemies[i].pos.x-player.pos.x) + Math.abs(enemies[i].pos.y-player.pos.y) == 0){
+			enemies[i].pos =  gameBoard.pickRandomPosition();
 			taken = true;
 		}
 	}	
@@ -173,7 +179,7 @@ function checkEnemyCollision(){
 function checkPresents(){
 	//check if player reached a present
     for(var i=0; i<amountOfPresents; i++) {
-        if(player.pos.x == presents[i].x && player.pos.y == presents[i].y) presents[i].pickedUpAction();
+        if(player.pos.x == presents[i].x && player.pos.y == presents[i].y && presents[i].pickedUp == false) presents[i].pickedUpAction();
     }
 }
 

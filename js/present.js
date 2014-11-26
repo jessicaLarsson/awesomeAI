@@ -19,7 +19,7 @@ function present () {
 
 	this.pickedUpAction = function () {
 		if(!player.hasPresent) {
-			// this.pickedUp = true;
+			this.pickedUp = true;
 			pickedUpPresents ++;
 			player.hasPresent = true;
 			this.svgElement.remove();
