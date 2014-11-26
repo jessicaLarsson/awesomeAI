@@ -61,7 +61,9 @@
 					break;
 	      
 	      		case "wall":
-		        	// DO something different
+		        	if(this.type == "enemyRandomMovement"){
+		        		randomGoal = gameBoard.pickRandomPosition();
+		        	}
 				    break;
 
 				default:
