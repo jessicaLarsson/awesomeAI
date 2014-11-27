@@ -174,7 +174,7 @@ function checkEnemyCollision(){
 	if(taken){
 		if(player.hasPresent) {
 		    player.hasPresent = false;
-		    document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b>Oh no! You lost the present! Quick get all the others!';	    
+		    document.getElementById('santasResponse').innerHTML = 'Oh no! You lost the present! Quick get all the others!';	    
 	  	}
     	lives = lives-1;
     	document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';	  	
@@ -196,11 +196,11 @@ function checkSantaInteraction(){
 	if(player.pos.x == santa.pos.x && player.pos.y == santa.pos.y) {
 		if(player.hasPresent) {
 			points = points+10;
-			document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Thank you!';
+			document.getElementById('santasResponse').innerHTML = 'Thank you!';
 			document.getElementById('points').innerHTML = '<br><b>Points:</b> ' + points;
 			player.hasPresent = false;
 		} else {
-			document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> Hurry up! Save Christmas by collecting all of the presents!';
+			document.getElementById('santasResponse').innerHTML = 'Hurry up! Save Christmas by collecting all of the presents!';
 		}
 	}
 }

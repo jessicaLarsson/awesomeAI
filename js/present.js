@@ -24,7 +24,7 @@ function present () {
 			player.hasPresent = true;
 			this.svgElement.remove();
 
-		} else document.getElementById('santasResponse').innerHTML = '<br><b>Santa: </b> You can only pick up one present at a time - bring me the present you are currently carrying!';
+		} else document.getElementById('santasResponse').innerHTML = 'You can only pick up one present at a time!';
 	}
 
 	this.giveToSanta = function () {

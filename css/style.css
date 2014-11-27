@@ -62,12 +62,56 @@ svg {
 
 #santaImage {
 
-	margin-top: 380px;
+	margin-top: -8px;
+}
+
+#santasResponse {
+	margin-top: 130px;
+	margin-left: 140px;
+	position: relative;
+	width: 350px;
+	height: 130px;
+	text-align: center;
+	line-height: 100px;
+	background-color: #fff;
+	border: 8px solid #cd9f61;
+	-webkit-border-radius: 30px;
+	-moz-border-radius: 30px;
+	border-radius: 30px;
+	-webkit-box-shadow: 2px 2px 4px #888;
+	-moz-box-shadow: 2px 2px 4px #888;
+	box-shadow: 2px 2px 4px #888;
+}
+
+#santasResponse:before {
+	margin-top: 14px;
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 30px;
+	top: 100px;
+	border: 25px solid;
+	border-color: #cd9f61 transparent transparent #cd9f61;
+
+}
+#santasResponse:after {
+	margin-top: 14px;
+	content: ' ';
+	position: absolute;
+	width: 0;
+	height: 0;
+	left: 38px;
+	top: 100px;
+	border: 15px solid;
+	border-color: #fff transparent transparent #fff;
 }
 
 #infoPanel {
-	margin-top: 200px;
-	
+	margin-top: 40px;
+	margin-left: 80px;
+
+
 }
 
 
