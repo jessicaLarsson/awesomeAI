@@ -6,8 +6,8 @@ var points = 0;
 var amountOfPresents = 2;
 
 
-
-document.getElementById('level-body').innerHTML = '<b>level:</b> ' + level + '';
+updateInfoPanel();
+// document.getElementById('level-body').innerHTML = '<b>level:</b> ' + level + '';
 $('#newLevelModal').modal('show');
 
 
@@ -34,9 +34,6 @@ santa.draw();
 var amountOfPresents = (level*2+1);
 createPresents(amountOfPresents);
 
-//GAME INFO PANEL TEXT
-document.getElementById('level').innerHTML = '<br><b>level:</b> ' + level + '';
-document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';
 
 
 //EVENT HANDLERS
@@ -66,7 +63,7 @@ function createPresents(amountOfPresents) {
 }
 
 function setNewLevel() { 
-	document.getElementById('level').innerHTML = '<br><b>level:</b> ' + level + '';
+	updateInfoPanel();
     amountOfPresents++;
     createPresents(amountOfPresents);
     if(level == 2){
@@ -177,7 +174,7 @@ function checkEnemyCollision(){
 		    document.getElementById('santasResponse').innerHTML = 'Oh no! You lost the present! Quick get all the others!';	    
 	  	}
     	lives = lives-1;
-    	document.getElementById('lives').innerHTML = '<br><b>lives:</b> ' + lives + '';	  	
+    	updateInfoPanel();  	
 	}
 }
 
@@ -197,11 +194,18 @@ function checkSantaInteraction(){
 		if(player.hasPresent) {
 			points = points+10;
 			document.getElementById('santasResponse').innerHTML = 'Thank you!';
-			document.getElementById('points').innerHTML = '<br><b>Points:</b> ' + points;
 			player.hasPresent = false;
 		} else {
 			document.getElementById('santasResponse').innerHTML = 'Hurry up! Save Christmas by collecting all of the presents!';
 		}
+		updateInfoPanel();
 	}
+}
+//GAME INFO PANEL TEXT
+function updateInfoPanel() {
+	document.getElementById('level').innerHTML = '<b>Level:</b> ' + level + '';
+	document.getElementById('lives').innerHTML = '<b>Lives:</b> ' + lives + '';
+	document.getElementById('points').innerHTML = '<b>Points:</b> ' + points + '';
+
 }
 
