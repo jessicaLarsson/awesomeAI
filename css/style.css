@@ -53,6 +53,12 @@ svg {
 	stroke-width: 3px;
 	stroke: black;
 }
+.enemyAstar {
+
+	fill: magenta;
+	stroke-width: 3px;
+	stroke: black;
+}
 
 .enemyPlayerDirection {
 	fill: green;

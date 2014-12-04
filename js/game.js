@@ -22,7 +22,8 @@ player.draw();
 
 //CREATE ENEMY
 var enemies =[]; 
-enemies.push(new enemy("enemyClosestDistance"));
+//enemies.push(new enemy("enemyClosestDistance"));
+enemies.push(new enemy("enemyAstar"));
 enemies[0].draw();
 
 //CREATE SANTA
@@ -44,8 +45,8 @@ enemyMoveInterval = setInterval(function () {
 	moveEnemies();
 	checkIfDone();
 	checkEnemyCollision();
-	}, 400); 
-
+	}, 500); 
+//moveEnemies();
 
 function moveEnemies() {
 	for(var i = 0; i < enemies.length; i++){
