@@ -16,23 +16,23 @@ gameBoard = new gameBoard();
 gameBoard.buildBoard();
 gameBoard.draw();
 
+//CREATE PRESENTS
+var amountOfPresents = 3;
+createPresents(amountOfPresents);
+
 //CREATE PLAYER
 player = new player();
 player.draw();
 
 //CREATE ENEMY
 var enemies =[]; 
-enemies.push(new enemy("enemyClosestDistance"));
+//enemies.push(new enemy("enemyClosestDistance"));
+enemies.push(new enemy("enemyAstar"));
 enemies[0].draw();
 
 //CREATE SANTA
 santa = new santa();
 santa.draw();
-
-
-//CREATE PRESENTS
-var amountOfPresents = 3;
-createPresents(amountOfPresents);
 
 
 //INTERVAL FUNCTIONS
@@ -45,18 +45,17 @@ enemyMoveInterval = setInterval(function () {
 }, 400); 
 
 
-function start(){
+function startGame(){
 	pause = false;
 	listener = window.addEventListener("keydown", keyDownHandler, true);
 
 }
 
-function pause(){
-	pausie = true;
+function pauseGame(){
+	pause = true;
 	listener = window.addEventListener("keydown", keyDownHandler, false);
 
 }
-
 
 function moveEnemies() {
 	for(var i = 0; i < enemies.length; i++){
@@ -77,7 +76,7 @@ function setNewLevel() {
 	updateInfoPanel();
     amountOfPresents++;
     createPresents(amountOfPresents);
-    pause();
+    pauseGame();
     $('#newLevelModal').modal('show');
     if(level == 2){
     	enemies.push(new enemy("enemyRandomMovement"));
@@ -152,7 +151,6 @@ function executeCommands(next) {
 	checkEnemyCollision();
 	checkPresents();
 	checkSantaInteraction();
-	//player.draw();
 }
 
 function checkIfDone() {
@@ -188,7 +186,7 @@ function checkEnemyCollision(){
 		    document.getElementById('santasResponse').innerHTML = 'Oh no! You lost the present! Quick get all the others!';	    
 	  	}
     	lives = lives-1;
-    	updateInfoPanel();  	
+    	document.getElementById('life'+(lives+1)).className += " faded_life"
 	}
 }
 
@@ -219,7 +217,7 @@ function checkSantaInteraction(){
 //GAME INFO PANEL TEXT
 function updateInfoPanel() {
 	document.getElementById('level').innerHTML = '<b>Level:</b> ' + level + '';
-	document.getElementById('lives').innerHTML = '<b>Lives:</b> ' + lives + '';
+	//document.getElementById('lives').innerHTML = '<b>Lives:</b> ' + lives + '';
 	document.getElementById('points').innerHTML = '<b>Points:</b> ' + points + '';
 
 }

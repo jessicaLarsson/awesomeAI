@@ -1,6 +1,19 @@
 
 body {
-    background-color: #EEEEEE;
+	background-color: #72beff;
+    background: url('../images/bg.png');
+  	background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: bottom; 
+ }
+
+ .customized-navbar{
+ 	color: #000000;
+ 	opacity: 0.4;
+ }
+
+.wrapper {
+	padding-top: 50px;
 }
 
 .display {
@@ -53,6 +66,12 @@ svg {
 	stroke-width: 3px;
 	stroke: black;
 }
+.enemyAstar {
+
+	fill: magenta;
+	stroke-width: 3px;
+	stroke: black;
+}
 
 .enemyPlayerDirection {
 	fill: green;
@@ -96,7 +115,7 @@ svg {
 	box-shadow: 2px 2px 4px #888;
 }
 #lives {
-	margin-top: 10px;
+	margin-top: 20px;
 	margin-left: 140px;
 	position: relative;
 	width: 350px;
@@ -112,6 +131,16 @@ svg {
 	-webkit-box-shadow: 2px 2px 4px #888;
 	-moz-box-shadow: 2px 2px 4px #888;
 	box-shadow: 2px 2px 4px #888;
+}
+
+.life {
+	font-size: 30px;
+	margin-right: 5px;
+	color: red;
+}
+
+.faded_life {
+	color: #dddddd !important;
 }
 
 #santaImage {

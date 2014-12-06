@@ -7,7 +7,7 @@ function present () {
 	this.done = 0;
 
 
-	this.draw = function (){
+	/*this.draw = function (){
 		this.svgElement = svgContainer
 	      .append("g")
 	      .append("circle")
@@ -15,6 +15,16 @@ function present () {
 	      .attr("cy", scales.y(this.y + 0.5))
 	      .attr("r", circleRadius)
 	      .attr("class", "goal");
+	}*/
+
+	this.draw = function (){
+		this.svgElement = svgContainer
+	      .append("image")
+	      .attr("x", scales.x(this.x))
+	      .attr("y", scales.y(this.y))
+	      .attr("width", 25)
+	      .attr("height", 25)
+	      .attr("xlink:href", "images/present.png");
 	}
 
 	this.pickedUpAction = function () {

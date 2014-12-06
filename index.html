@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="stylesheet" href="css/font-awesome.min.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 		<title>Save Christmas! </title>
    <!-- Bootstrap -->
@@ -10,7 +11,30 @@
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 	<body>
-		<div class="container">
+
+		 <!-- Fixed navbar -->
+	    <nav class="navbar navbar-default navbar-fixed-top customized-navbar" role="navigation">
+	      <div class="container">
+	        <div class="navbar-header">
+	          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	            <span class="sr-only">Toggle navigation</span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	            <span class="icon-bar"></span>
+	          </button>
+	          <a class="navbar-brand" href="#">Project name</a>
+	        </div>
+	        <div id="navbar" class="navbar-collapse collapse">
+	          <ul class="nav navbar-nav">
+	            <li class="active"><a href="#">Home</a></li>
+	            <li><a href="#about">About</a></li>
+	            <li><a href="#contact">Contact</a></li>
+	          </ul>
+	        </div><!--/.nav-collapse -->
+	      </div>
+	    </nav>
+
+		<div class="container wrapper">
 			<div class="row">
 				<div class="col-md-6">
 					<div class="display", id="display"></div>
@@ -20,7 +44,9 @@
 			
 					<div id="level"></div>
 		        	<div id="points"></div>
-		        	<div id="lives"></div>
+		        	<div id="lives">
+		        		<i class="fa fa-heart life" id="life1"></i><i class="fa fa-heart life" id="life2"></i><i class="fa fa-heart life" id="life3"></i>
+		        	</div>
 		        	      				
         			<div id="santasResponse">Save Christmas!</div> 
 		        	<div id="santaImage"><img src="images/santa_claus.png" alt="No image found!"></div>     	
@@ -40,7 +66,7 @@
 		     		You can only pick up one presents at a time Hurry up!</p>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="start()">Save Christmas!</button>        
+		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="startGame()">Save Christmas!</button>        
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -57,7 +83,7 @@
 		     	<p id="level-body"></p>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="start()">Save Christmas!</button>        
+		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="startGame()">Save Christmas!</button>        
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
