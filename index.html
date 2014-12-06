@@ -27,6 +27,25 @@
 		        </div>  	   	
 		</div> <!-- row -->
 
+		<div class="modal fade" id="newGameModal">
+		  <div class="modal-dialog">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+		        <h4 class="modal-title">Help Santa and Save Christmas</h4>
+		      </div>
+		      <div class="modal-body">
+		     	<p>Help Santa Save Christmas by collecting all presents and leave them to Santa. Watch out for the mean thieves, they
+		     		will try to steal all presents from you. Also, watch out for the slippery ice so you donät fall and drop the presents.
+		     		You can only pick up one presents at a time Hurry up!</p>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="start()">Save Christmas!</button>        
+		      </div>
+		    </div><!-- /.modal-content -->
+		  </div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
 		<div class="modal fade" id="newLevelModal">
 		  <div class="modal-dialog">
 		    <div class="modal-content">
@@ -38,8 +57,7 @@
 		     	<p id="level-body"></p>
 		      </div>
 		      <div class="modal-footer">
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Save Christmas!</button>
-		        
+		        <button type="button" class="btn btn-default" data-dismiss="modal" onclick="start()">Save Christmas!</button>        
 		      </div>
 		    </div><!-- /.modal-content -->
 		  </div><!-- /.modal-dialog -->
@@ -55,6 +73,5 @@
  		<script src="js/player.js"></script>
  		<script src="js/board.js"></script>
 	    <script src="js/game.js"></script>
-	   
 	</body>
 </html>

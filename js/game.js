@@ -4,11 +4,11 @@ var lives = 3;
 var pickedUpPresents = 0;
 var points = 0;
 var amountOfPresents = 2;
+var pause = true;
 
 
 updateInfoPanel();
-// document.getElementById('level-body').innerHTML = '<b>level:</b> ' + level + '';
-$('#newLevelModal').modal('show');
+$('#newGameModal').modal('show');
 
 
 //CREATE GAMEBOARD
@@ -31,26 +31,37 @@ santa.draw();
 
 
 //CREATE PRESENTS
-var amountOfPresents = (level*2+1);
+var amountOfPresents = 3;
 createPresents(amountOfPresents);
 
 
-
-//EVENT HANDLERS
-window.addEventListener("keydown", keyDownHandler, true);
-
 //INTERVAL FUNCTIONS
 enemyMoveInterval = setInterval(function () {
-	moveEnemies();
-	checkIfDone();
-	checkEnemyCollision();
-	}, 400); 
+	if(!pause){
+		moveEnemies();
+		checkIfDone();
+		checkEnemyCollision();
+	}
+}, 400); 
+
+
+function start(){
+	pause = false;
+	listener = window.addEventListener("keydown", keyDownHandler, true);
+
+}
+
+function pause(){
+	pausie = true;
+	listener = window.addEventListener("keydown", keyDownHandler, false);
+
+}
 
 
 function moveEnemies() {
 	for(var i = 0; i < enemies.length; i++){
 		enemies[i].move();
-	}
+	}	
 }
 
 
@@ -66,6 +77,8 @@ function setNewLevel() {
 	updateInfoPanel();
     amountOfPresents++;
     createPresents(amountOfPresents);
+    pause();
+    $('#newLevelModal').modal('show');
     if(level == 2){
     	enemies.push(new enemy("enemyRandomMovement"));
 		enemies[1].draw();
@@ -79,6 +92,7 @@ function setNewLevel() {
 function keyDownHandler(event){
 	var key = event.which;
     var next;
+
 
 	if(key==37 || key==39 || key==38 || key==40){
 
@@ -201,6 +215,7 @@ function checkSantaInteraction(){
 		updateInfoPanel();
 	}
 }
+
 //GAME INFO PANEL TEXT
 function updateInfoPanel() {
 	document.getElementById('level').innerHTML = '<b>Level:</b> ' + level + '';
