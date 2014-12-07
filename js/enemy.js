@@ -108,6 +108,7 @@
 
 ///////////////////////////////////////////////////////////////////
 // PATHFINDING WITH THE ASTAR ALGORITHM 
+// this part is a modified version of: http://buildnewgames.com/astar/
 ///////////////////////////////////////////////////////////////////
 
 function findPathAstar(board, pathStart, pathEnd)
@@ -262,7 +263,6 @@ function findPathAstar(board, pathStart, pathEnd)
 		return result;
 	}
 
-	// actually calculate the a-star path!
 	// this returns an array of coordinates
 	// that is empty if no path is possible
 	return calculatePath();
