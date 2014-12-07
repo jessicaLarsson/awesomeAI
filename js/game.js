@@ -31,7 +31,7 @@ player.draw();
 //CREATE ENEMY
 var enemies =[]; 
 //enemies.push(new enemy("enemyClosestDistance"));
-enemies.push(new enemy("enemyAstar"));
+enemies.push(new enemy("enemyRandomMovement"));
 enemies[0].draw();
 
 
@@ -79,12 +79,14 @@ function setNewLevel() {
     pauseGame();
     $('#newLevelModal').modal('show');
     if(level == 2){
-    	enemies.push(new enemy("enemyRandomMovement"));
+    	enemies.push(new enemy("enemyAstar"));
 		enemies[1].draw();
     }
     if(level == 3){
+    	enemies.push(new enemy("enemyClosestDistance"));
     	enemies.push(new enemy("enemyPlayerDirection"));
 		enemies[2].draw();
+		enemies[3].draw();
     }
 }
   
