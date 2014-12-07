@@ -6,17 +6,6 @@ function present () {
 	this.svgElement = "";
 	this.done = 0;
 
-
-	/*this.draw = function (){
-		this.svgElement = svgContainer
-	      .append("g")
-	      .append("circle")
-	      .attr("cx", scales.x(this.x + 0.5))
-	      .attr("cy", scales.y(this.y + 0.5))
-	      .attr("r", circleRadius)
-	      .attr("class", "goal");
-	}*/
-
 	this.draw = function (){
 		this.svgElement = svgContainer
 	      .append("image")

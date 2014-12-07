@@ -13,7 +13,7 @@
         .attr("y", scales.y(this.pos.y + 0.5) - 15)
         .attr("width", 30)
         .attr("height", 30)
-        .attr("xlink:href", "images/enemy1.png");
+        .attr("xlink:href", "images/"+this.type+".png");
 	}
 
 	this.move = function () {

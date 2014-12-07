@@ -20,6 +20,10 @@ gameBoard.draw();
 var amountOfPresents = 3;
 createPresents(amountOfPresents);
 
+//CREATE SANTA
+santa = new santa();
+santa.draw();
+
 //CREATE PLAYER
 player = new player();
 player.draw();
@@ -29,10 +33,6 @@ var enemies =[];
 //enemies.push(new enemy("enemyClosestDistance"));
 enemies.push(new enemy("enemyAstar"));
 enemies[0].draw();
-
-//CREATE SANTA
-santa = new santa();
-santa.draw();
 
 
 //INTERVAL FUNCTIONS

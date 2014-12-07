@@ -105,15 +105,13 @@ function gameBoard(){
     var cells = gridGroup.selectAll("rect")
                 .data(data)
                 .enter()
-                .append("rect");
+                .append("image");
     var cellAttributes = cells
              .attr("x", function (d) { return scales.x(d.x); })
              .attr("y", function (d) { return scales.y(d.y); })
              .attr("width", function (d) { return squareLength; })
              .attr("height", function (d) { return squareLength; })
-             .attr("rx", 7)
-             .attr("ry", 7)
-             .attr("class", cssClass);
+              .attr("xlink:href", "images/ice.png");
 
   }
 

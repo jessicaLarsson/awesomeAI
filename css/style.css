@@ -44,40 +44,6 @@ svg {
 	stroke: red;
 }
 
-.player {
-	fill: #C9EBF0;
-	stroke: #2973F2;
-}
-
-.gotPresent {
-	fill: green;
-	stroke: #2973F2;
-}
-
-.enemyClosestDistance {
-	fill: pink;
-	stroke-width: 3px;
-	stroke: black;
-}
-
-.enemyRandomMovement {
-
-	fill: orange;
-	stroke-width: 3px;
-	stroke: black;
-}
-.enemyAstar {
-
-	fill: magenta;
-	stroke-width: 3px;
-	stroke: black;
-}
-
-.enemyPlayerDirection {
-	fill: green;
-	stroke-width: 3px;
-	stroke: black;
-}
 #points {
 	margin-top: 10px;
 	margin-left: 140px;
