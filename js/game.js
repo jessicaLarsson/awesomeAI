@@ -47,13 +47,13 @@ enemyMoveInterval = setInterval(function () {
 
 function startGame(){
 	pause = false;
-	listener = window.addEventListener("keydown", keyDownHandler, true);
+	window.addEventListener("keydown", keyDownHandler);
 
 }
 
 function pauseGame(){
 	pause = true;
-	listener = window.addEventListener("keydown", keyDownHandler, false);
+	window.removeEventListener("keydown", keyDownHandler);
 
 }
 
